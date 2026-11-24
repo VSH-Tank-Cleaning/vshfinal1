@@ -217,6 +217,9 @@ body { color: var(--vsh-ink); font-family: var(--font-inter), "Helvetica Neue", 
 .floating-question-trigger { position: fixed; bottom: 120px; left: 20px; z-index: 46; display: inline-flex; min-height: 48px; align-items: center; justify-content: center; gap: 9px; padding: 0 18px; border-radius: 999px; background: linear-gradient(110deg,#087be1,#078eae); color: white; box-shadow: 0 10px 26px rgba(13,52,83,.24); font-size: 13px; font-weight: 750; transition: transform .16s, box-shadow .16s; }
 .floating-question-trigger:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(13,52,83,.3); }
 .booking-discount-promos { position: fixed; z-index: 49; bottom: 18px; left: 18px; width: auto; }
+.booking-discount-promos--inline { position: relative; z-index: auto; bottom: auto; left: auto; display: flex; justify-content: center; width: 100%; margin: 18px auto 30px; padding: 10px 0; }
+.booking-discount-promos--inline .booking-discount-grid { justify-content: center; gap: 16px; }
+.booking-discount-promos--inline .booking-discount-card { width: 74px; height: 74px; }
 .booking-discount-grid { display: flex; align-items: center; gap: 9px; }
 .booking-discount-card { position: relative; display: flex; width: 70px; height: 70px; flex: 0 0 auto; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 6px; overflow: hidden; border: 2px solid #fff; border-radius: 50%; background: radial-gradient(circle at 32% 24%, #fff56a 0%, #ffd500 48%, #ffad00 100%); color: #142b42; box-shadow: 0 4px 15px rgba(20,43,66,.32), 0 0 13px rgba(255,213,0,.7); transition: transform .18s ease, box-shadow .18s ease; animation: discount-glow 1.8s ease-in-out infinite; }
 .booking-discount-card::after { position: absolute; inset: 0; content: ''; pointer-events: none; border-radius: inherit; background: linear-gradient(110deg, transparent 25%, rgba(255,255,255,.8) 48%, transparent 70%); transform: translateX(-120%); animation: discount-shine 2.8s ease-in-out infinite; }
@@ -229,6 +232,7 @@ body { color: var(--vsh-ink); font-family: var(--font-inter), "Helvetica Neue", 
 .booking-discount-copy small { color: #26384c; font-size: 6px; font-weight: 800; line-height: 1.1; letter-spacing: .06em; }
 @keyframes discount-glow { 0%,100% { box-shadow: 0 4px 13px rgba(20,43,66,.3), 0 0 7px rgba(255,213,0,.45); } 50% { box-shadow: 0 5px 17px rgba(20,43,66,.34), 0 0 19px rgba(255,213,0,.98); } }
 @keyframes discount-shine { 0%,45% { transform: translateX(-120%); } 75%,100% { transform: translateX(120%); } }
+@media (max-width: 600px) { .booking-discount-promos--inline { margin: 14px auto 24px; }.booking-discount-promos--inline .booking-discount-grid { gap: 12px; }.booking-discount-promos--inline .booking-discount-card { width: 62px; height: 62px; } }
 @media (prefers-reduced-motion: reduce) { .booking-discount-card,.booking-discount-card::after { animation: none; } }
 .floating-question-trigger:focus-visible,.contact-form button:focus-visible,.contact-form input:focus-visible,.contact-form textarea:focus-visible { outline: 3px solid #ffbf47; outline-offset: 3px; }
 .prices-contact-section { display: grid; grid-template-columns: minmax(0,.85fr) minmax(0,1.15fr); gap: 28px; margin-top: 40px; padding: clamp(22px,4vw,38px); scroll-margin-top: 100px; border: 1px solid #dbe5ed; border-radius: 22px; background: linear-gradient(145deg,#f0f8fd,#fff 65%); }

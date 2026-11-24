@@ -81,5 +81,5 @@ function Footer() {
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
-  return <CartProvider><Header/><main>{pathname !== '/' && <div className="sitewide-price-calculator"><PriceCalculator /></div>}{children}</main><Footer/><BookingDiscountPromos/><FloatingActions/></CartProvider>
+  return <CartProvider><Header/><main>{pathname !== '/' && <div className="sitewide-price-calculator"><PriceCalculator /></div>}{children}{pathname !== '/cart' && <BookingDiscountPromos variant="inline" />}</main><Footer/><BookingDiscountPromos/><FloatingActions/></CartProvider>
 }

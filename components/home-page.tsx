@@ -7,6 +7,7 @@ import { PriceCalculator } from './price-calculator'
 import { areaSlug, serviceAreaGroups } from '@/lib/service-areas'
 import { BeforeAfterGallery } from './before-after-gallery'
 import { ProcessTimeline } from './process-timeline'
+import { BookingDiscountPromos } from './floating-discount-notifications'
 
 
 
@@ -45,6 +46,7 @@ export function HomePage() {
         <Link className="customer-type-card" href="/services#shops-workplaces"><span className="customer-type-icon"><Store size={21}/></span><h3>Shops &amp; workplaces</h3><p>Practical scheduling for commercial properties.</p></Link>
         <Link className="customer-type-card" href="/services#regular-maintenance"><span className="customer-type-icon"><RotateCw size={21}/></span><h3>Regular maintenance</h3><p>Plan recurring cleaning around your needs.</p></Link>
       </div>
+      <BookingDiscountPromos variant="inline" />
     </section>
 
     <section className="reference-section process-reference-section"><div className="reference-section-heading"><span className="section-kicker">OUR CLEANING METHOD</span><h2>What a VSH tank cleaning includes</h2><p>Each visit follows a careful five-step process, tailored to your tank and the condition we find.</p></div><ProcessTimeline /><div className="process-callout"><span><ShieldCheck size={20}/></span><p>We remove settled sludge before scrubbing, then disinfect and rinse the tank before handover.</p><Link href="/processes">See our full process <ArrowRight size={15}/></Link></div></section>
