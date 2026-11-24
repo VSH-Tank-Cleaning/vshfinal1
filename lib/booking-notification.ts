@@ -7,6 +7,7 @@ type BookingNotification = {
   customer: CustomerDetails
   items: BookingItem[]
   paymentStatus: BookingPaymentStatus
+  bookingId: string
   paymentId?: string
   idempotencyKey: string
 }
@@ -15,6 +16,7 @@ export async function sendBookingNotification({
   customer,
   items,
   paymentStatus,
+  bookingId,
   paymentId,
   idempotencyKey,
 }: BookingNotification): Promise<boolean> {
@@ -31,9 +33,10 @@ export async function sendBookingNotification({
   const amount = calculateBookingTotal(items, paymentStatus === 'paid')
   const emailText = [
     paymentStatus === 'paid' ? 'A tank cleaning booking has been paid online.' : 'A tank cleaning booking is due for payment after service.',
+    `Booking ID: ${bookingId}`,
     '',
     `Customer: ${customer.name}`,
-    `Customer email: ${customer.email}`,
+    `Customer email: ${customer.email || 'Not provided'}`,
     `Phone: ${customer.phone}`,
     `Service address: ${customer.address}`,
     `Area: ${customer.area}`,
@@ -64,7 +67,7 @@ export async function sendBookingNotification({
       body: JSON.stringify({
         from: fromEmail,
         to: [notificationEmail],
-        subject: paymentStatus === 'paid' ? 'Paid tank cleaning booking' : 'New booking — payment due after service',
+        subject: paymentStatus === 'paid' ? `Booking ${bookingId} — paid tank cleaning` : `Booking ${bookingId} — payment due after service`,
         text: emailText,
       }),
       cache: 'no-store',

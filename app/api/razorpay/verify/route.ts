@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createHmac, timingSafeEqual } from 'node:crypto'
 import { sendBookingNotification } from '@/lib/booking-notification'
-import { calculateBookingTotal, parseBookingItems, parseCustomerDetails, razorpayAuthorization } from '@/lib/razorpay'
+import { calculateBookingTotal, generateBookingId, parseBookingItems, parseCustomerDetails, razorpayAuthorization } from '@/lib/razorpay'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -77,17 +77,19 @@ export async function POST(request: Request) {
       timeSlot: orderNotes.preferred_time_slot,
       notes: orderNotes.customer_notes === 'None' ? '' : orderNotes.customer_notes,
     })
+    const bookingId = generateBookingId(paymentId)
     const notificationSent = customer
       ? await sendBookingNotification({
         customer,
         items,
         paymentStatus: 'paid',
+        bookingId,
         paymentId,
         idempotencyKey: `booking-notification-${paymentId}`,
       })
       : false
 
-    return NextResponse.json({ verified: true, notificationSent })
+    return NextResponse.json({ verified: true, bookingId, notificationSent })
   } catch {
     return NextResponse.json({ error: 'Unable to confirm payment with Razorpay. Please contact our team with your payment ID.' }, { status: 502 })
   }

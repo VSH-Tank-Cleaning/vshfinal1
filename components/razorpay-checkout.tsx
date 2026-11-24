@@ -30,7 +30,7 @@ type RazorpayOptions = {
   name: string
   description: string
   order_id: string
-  prefill: { name: string; email: string; contact: string }
+  prefill: { name: string; email?: string; contact: string }
   notes: Record<string, string>
   theme: { color: string }
   handler: (payment: RazorpayPayment) => void | Promise<void>
@@ -119,7 +119,7 @@ export function RazorpayCheckout({ items, onPaymentComplete }: { items: BookingI
         name: 'VSH Tank Cleaning',
         description: 'Tank cleaning service booking',
         order_id: orderData.orderId,
-        prefill: { name: customer.name, email: customer.email, contact: customer.phone },
+        prefill: { name: customer.name, ...(customer.email ? { email: customer.email } : {}), contact: customer.phone },
         notes: { service_area: customer.area, pincode: customer.pincode },
         theme: { color: '#17628b' },
         handler: async (payment) => {
@@ -187,8 +187,8 @@ export function RazorpayCheckout({ items, onPaymentComplete }: { items: BookingI
           </div>
         </div>
         <div className="razorpay-field">
-          <label htmlFor="booking-email">Email address *</label>
-          <input id="booking-email" name="email" type="email" autoComplete="email" value={customer.email} onChange={(event) => updateCustomer('email', event.target.value)} maxLength={254} required />
+          <label htmlFor="booking-email">Email address (optional)</label>
+          <input id="booking-email" name="email" type="email" autoComplete="email" value={customer.email} onChange={(event) => updateCustomer('email', event.target.value)} maxLength={254} />
         </div>
       </section>
       <section className="checkout-step" aria-labelledby="checkout-address-heading">

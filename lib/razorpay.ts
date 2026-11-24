@@ -1,3 +1,4 @@
+import { createHash, randomInt } from 'node:crypto'
 import { isSupportedPincode } from './service-areas'
 
 export type BookingItem = { id: string; qty: number }
@@ -107,12 +108,21 @@ function cleanText(value: unknown, maxLength: number): string | null {
   return text.length > 0 && text.length <= maxLength ? text : null
 }
 
+export function generateBookingId(seed?: string): string {
+  const value = seed
+    ? createHash('sha256').update(seed).digest().readUInt32BE(0) % 900_000
+    : randomInt(900_000)
+  return String(value + 100_000)
+}
+
 export function parseCustomerDetails(value: unknown): CustomerDetails | null {
   if (!value || typeof value !== 'object') return null
   const fields = value as Record<string, unknown>
   const name = cleanText(fields.name, 100)
   const phone = cleanText(fields.phone, 20)
-  const email = cleanText(fields.email, 254)
+  const email = typeof fields.email === 'string'
+    ? fields.email.trim() ? cleanText(fields.email, 254) : ''
+    : fields.email === undefined || fields.email === null ? '' : null
   const address = cleanText(fields.address, 240)
   const area = cleanText(fields.area, 100)
   const pincode = cleanText(fields.pincode, 6)
@@ -120,9 +130,9 @@ export function parseCustomerDetails(value: unknown): CustomerDetails | null {
   const timeSlot = cleanText(fields.timeSlot, 40)
   const notes = fields.notes === '' ? '' : cleanText(fields.notes, 200)
 
-  if (!name || !phone || !email || !address || !area || !pincode || !preferredDate || !timeSlot || notes === null) return null
+  if (!name || !phone || email === null || !address || !area || !pincode || !preferredDate || !timeSlot || notes === null) return null
   if (name.length < 2 || address.length < 5 || area.length < 2) return null
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return null
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return null
   if (!/^\d{10}$/.test(phone.replace(/\D/g, ''))) return null
   if (!isSupportedPincode(pincode)) return null
   if (!/^\d{4}-\d{2}-\d{2}$/.test(preferredDate)) return null
