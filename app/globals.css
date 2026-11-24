@@ -370,9 +370,9 @@ body { color: var(--vsh-ink); font-family: var(--font-inter), "Helvetica Neue", 
 .process-duration-table th:first-child { width: 31%; }
 .process-duration-table tbody tr:nth-child(even) { background: #f2f7fb; }
 .process-duration-table tbody tr:last-child td { border-bottom: 0; }
-.process-preparation { margin: 0 auto 36px; }
+.process-preparation { margin: 0 auto 36px; text-align: center; }
 .process-preparation h2 { margin: 0 0 19px; color: var(--vsh-ink); font-size: clamp(25px,3.5vw,36px); letter-spacing: -.045em; }
-.process-preparation-list { display: grid; gap: 13px; margin: 0; padding: 0; list-style: none; }
+.process-preparation-list { display: grid; width: fit-content; gap: 13px; margin: 0 auto; padding: 0; list-style: none; text-align: left; }
 .process-preparation-list li { display: flex; align-items: flex-start; gap: 12px; color: #435c75; font-size: 15px; line-height: 1.6; }
 .process-preparation-list svg { flex: 0 0 auto; margin-top: 3px; color: #12b8cf; }
 .process-visual-cta { display: flex; align-items: center; justify-content: space-between; gap: 22px; margin-top: 38px; padding: 25px; border-radius: 22px; background: #0b1e36; color: white; }
