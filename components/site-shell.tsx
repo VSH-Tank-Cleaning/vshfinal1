@@ -8,7 +8,7 @@ import { ArrowRight, MapPin, Menu, MessageCircle, Phone, ShoppingCart, X } from 
 import { CartProvider, useCart } from './tank-cart'
 import { PriceCalculator } from './price-calculator'
 import { ContactQuestion } from './contact-question'
-import { FloatingDiscountNotifications } from './floating-discount-notifications'
+import { BookingDiscountPromos } from './floating-discount-notifications'
 
 const nav = [
   ['Services', '/services'], ['Prices', '/prices'], ['Areas', '/areas'], ['Process', '/processes'],
@@ -33,7 +33,6 @@ function FloatingActions() {
   const pathname = usePathname()
   const [isContactVisible, setIsContactVisible] = useState(false)
   const [isCalculatorVisible, setIsCalculatorVisible] = useState(false)
-  const [isHeroVisible, setIsHeroVisible] = useState(false)
 
   useEffect(() => {
     const section = document.getElementById('contact-form')
@@ -63,20 +62,6 @@ function FloatingActions() {
     return () => observer.disconnect()
   }, [pathname])
 
-  useEffect(() => {
-    const hero = document.querySelector('.reference-hero')
-    if (!hero) {
-      setIsHeroVisible(false)
-      return
-    }
-
-    const observer = new IntersectionObserver(([entry]) => {
-      setIsHeroVisible(entry.isIntersecting)
-    }, { threshold: 0.01 })
-    observer.observe(hero)
-    return () => observer.disconnect()
-  }, [pathname])
-
   if (pathname === '/cart' || isContactVisible) return null
   return <>
     {!isCalculatorVisible && <>
@@ -87,7 +72,6 @@ function FloatingActions() {
       </nav>
       <ContactQuestion />
     </>}
-    {!isCalculatorVisible && !isHeroVisible && <FloatingDiscountNotifications />}
   </>
 }
 
@@ -97,5 +81,5 @@ function Footer() {
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
-  return <CartProvider><Header/><main>{pathname !== '/' && <div className="sitewide-price-calculator"><PriceCalculator /></div>}{children}</main><Footer/><FloatingActions/></CartProvider>
+  return <CartProvider><Header/><main>{pathname !== '/' && <div className="sitewide-price-calculator"><PriceCalculator /></div>}{children}{pathname !== '/' && pathname !== '/cart' && <BookingDiscountPromos />}</main><Footer/><FloatingActions/></CartProvider>
 }

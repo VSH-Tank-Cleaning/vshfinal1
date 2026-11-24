@@ -57,7 +57,7 @@ const emptyDetails: CustomerDetails = {
 
 export type PaymentMode = 'online' | 'after-service'
 
-export function RazorpayCheckout({ items, onPaymentComplete }: { items: BookingItem[]; onPaymentComplete: (mode: PaymentMode) => void }) {
+export function RazorpayCheckout({ items, onPaymentComplete }: { items: BookingItem[]; onPaymentComplete: (mode: PaymentMode, bookingId: string) => void }) {
   const [customer, setCustomer] = useState(emptyDetails)
   const [paymentMode, setPaymentMode] = useState<PaymentMode>('online')
   const [scriptReady, setScriptReady] = useState(false)
@@ -80,10 +80,11 @@ export function RazorpayCheckout({ items, onPaymentComplete }: { items: BookingI
         body: JSON.stringify({ items, customer }),
       })
       const data = await response.json().catch(() => null)
-      if (!response.ok || data?.confirmed !== true) {
+      const bookingId = typeof data?.bookingId === 'string' ? data.bookingId.trim() : ''
+      if (!response.ok || data?.confirmed !== true || !bookingId) {
         throw new Error(data?.error || 'We could not save your booking. Please try again.')
       }
-      onPaymentComplete('after-service')
+      onPaymentComplete('after-service', bookingId)
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'We could not save your booking. Please try again.')
       setProcessing(false)
@@ -135,10 +136,11 @@ export function RazorpayCheckout({ items, onPaymentComplete }: { items: BookingI
               }),
             })
             const verificationData = await verificationResponse.json().catch(() => null)
-            if (!verificationResponse.ok || verificationData?.verified !== true) {
+            const bookingId = typeof verificationData?.bookingId === 'string' ? verificationData.bookingId.trim() : ''
+            if (!verificationResponse.ok || verificationData?.verified !== true || !bookingId) {
               throw new Error(verificationData?.error || 'We could not confirm this payment. Please contact our team with your payment ID.')
             }
-            onPaymentComplete('online')
+            onPaymentComplete('online', bookingId)
           } catch (error) {
             setMessage(error instanceof Error ? error.message : 'We could not confirm this payment. Please contact our team.')
             setProcessing(false)

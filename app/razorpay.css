@@ -26,6 +26,10 @@
 .payment-success .empty-cart-icon { margin: 0 auto 17px; color: #16845c; background: #e9f7f1; }
 .payment-success h1 { margin: 12px 0; color: #163b55; font-size: clamp(32px,5vw,46px); letter-spacing: -.045em; line-height: 1.1; }
 .payment-success p { margin: 0 auto 20px; max-width: 420px; color: #718391; font-size: 13px; line-height: 1.7; }
+.booking-confirmation-id { display: grid; gap: 5px; max-width: 360px; margin: 0 auto 20px; padding: 14px 16px; border: 1px solid #cfe5fb; border-radius: 14px; background: #f2f9ff; }
+.booking-confirmation-id span { color: #536a84; font-size: 11px; font-weight: 650; }
+.booking-confirmation-id strong { color: #0b1e36; font-size: 24px; font-weight: 800; letter-spacing: .08em; }
+.booking-confirmation-id small { color: #61758c; font-size: 11px; line-height: 1.45; }
 @media (max-width: 600px) { .razorpay-field-row { grid-template-columns: 1fr; }.payment-success { margin: 10px auto; padding: 28px 20px; } }
 
 .checkout-page { max-width: 1440px; margin-inline: auto; padding-top: 52px; }
