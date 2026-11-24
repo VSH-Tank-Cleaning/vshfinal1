@@ -8,6 +8,7 @@ import { ArrowRight, MapPin, Menu, MessageCircle, Phone, ShoppingCart, X } from 
 import { CartProvider, useCart } from './tank-cart'
 import { PriceCalculator } from './price-calculator'
 import { ContactQuestion } from './contact-question'
+import { FloatingDiscountNotifications } from './floating-discount-notifications'
 
 const nav = [
   ['Services', '/services'], ['Prices', '/prices'], ['Areas', '/areas'], ['Process', '/processes'],
@@ -32,6 +33,7 @@ function FloatingActions() {
   const pathname = usePathname()
   const [isContactVisible, setIsContactVisible] = useState(false)
   const [isCalculatorVisible, setIsCalculatorVisible] = useState(false)
+  const [isHeroVisible, setIsHeroVisible] = useState(false)
 
   useEffect(() => {
     const section = document.getElementById('contact-form')
@@ -61,19 +63,36 @@ function FloatingActions() {
     return () => observer.disconnect()
   }, [pathname])
 
-  if (pathname === '/cart' || isContactVisible || isCalculatorVisible) return null
+  useEffect(() => {
+    const hero = document.querySelector('.reference-hero')
+    if (!hero) {
+      setIsHeroVisible(false)
+      return
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      setIsHeroVisible(entry.isIntersecting)
+    }, { threshold: 0.01 })
+    observer.observe(hero)
+    return () => observer.disconnect()
+  }, [pathname])
+
+  if (pathname === '/cart' || isContactVisible) return null
   return <>
-    <nav className="floating-contact-actions" aria-label="Quick contact">
-      <Link className="floating-contact-action floating-contact-book" href="/prices"><ArrowRight size={17} aria-hidden="true"/><span>Book now</span></Link>
-      <a className="floating-contact-action floating-contact-call" href="tel:9599057079"><Phone size={17} aria-hidden="true"/><span>Call us</span></a>
-      <a className="floating-contact-action floating-contact-whatsapp" aria-label="Chat with VSH on WhatsApp" href="https://wa.me/919599057079?text=Hi%2C%20I%27d%20like%20to%20book%20tank%20cleaning" target="_blank" rel="noreferrer"><MessageCircle size={17} aria-hidden="true"/><span>WhatsApp</span></a>
-    </nav>
-    <ContactQuestion />
+    {!isCalculatorVisible && <>
+      <nav className="floating-contact-actions" aria-label="Quick contact">
+        <Link className="floating-contact-action floating-contact-book" href="/prices"><ArrowRight size={17} aria-hidden="true"/><span>Book now</span></Link>
+        <a className="floating-contact-action floating-contact-call" href="tel:9599057079"><Phone size={17} aria-hidden="true"/><span>Call us</span></a>
+        <a className="floating-contact-action floating-contact-whatsapp" aria-label="Chat with VSH on WhatsApp" href="https://wa.me/919599057079?text=Hi%2C%20I%27d%20like%20to%20book%20tank%20cleaning" target="_blank" rel="noreferrer"><MessageCircle size={17} aria-hidden="true"/><span>WhatsApp</span></a>
+      </nav>
+      <ContactQuestion />
+    </>}
+    {!isCalculatorVisible && !isHeroVisible && <FloatingDiscountNotifications />}
   </>
 }
 
 function Footer() {
-  return <footer className="reference-footer"><div className="reference-footer-inner"><div className="footer-about"><Link className="reference-brand footer-brand" href="/" aria-label="VSH Tank Cleaning home"><Image className="reference-brand-logo" src="/vsh-logo.jpg" alt="" width={50} height={50} sizes="(max-width: 600px) 45px, 50px" /><span className="reference-brand-copy" aria-hidden="true">VSH TANK CLEANING</span></Link><p>Overhead and underground water tank cleaning for homes, societies and businesses across Delhi NCR.</p><address className="footer-address"><MapPin size={16} aria-hidden="true"/><span><strong>VSH Water Tank Cleaning</strong>C-194, Bhagwati Vihar, Uttam Nagar, New Delhi, Delhi 110059<br/>2387, Faiz Road, Karol Bagh, New Delhi, Delhi 110005<br/>Sub Branch: Mahipalpur, Delhi 110037</span></address><div className="footer-contact-row"><Phone size={16}/><a href="tel:+919599057079">+91 95990 57079</a></div><p className="footer-hours">Open every day · 9 AM–7 PM</p><p className="footer-offer">Pay Online to get extra 10% off</p><a className="footer-whatsapp" href="https://wa.me/919599057079?text=Hi%2C%20I%27d%20like%20to%20book%20tank%20cleaning" target="_blank" rel="noreferrer">WhatsApp our team <ArrowRight size={15}/></a></div><div className="footer-link-column"><strong>Services</strong><Link href="/services">Water tank cleaning</Link><Link href="/services">Overhead tank cleaning</Link><Link href="/services">Underground tank cleaning</Link><Link href="/services">Residential & commercial</Link></div><div className="footer-link-column"><strong>Service areas</strong><Link href="/areas">Delhi</Link><Link href="/areas">Noida, Greater Noida &amp; Ghaziabad</Link><Link href="/areas">Gurgaon &amp; Faridabad</Link></div><div className="footer-link-column"><strong>Help & information</strong><Link href="/prices">Price list</Link><Link href="/prices">Book cleaning</Link><Link href="/processes">Our cleaning process</Link><Link href="/guides">Tank care guides</Link><Link href="/about-us">About VSH</Link><Link href="/contact">Contact</Link></div></div><div className="reference-footer-bottom"><span>© {new Date().getFullYear()} VSH Tank Cleaning</span><span>Clean water starts with a clean tank.</span></div></footer>
+  return <footer className="reference-footer"><div className="reference-footer-inner"><div className="footer-about"><Link className="reference-brand footer-brand" href="/" aria-label="VSH Tank Cleaning home"><Image className="reference-brand-logo" src="/vsh-logo.jpg" alt="" width={50} height={50} sizes="(max-width: 600px) 45px, 50px" /><span className="reference-brand-copy" aria-hidden="true">VSH TANK CLEANING</span></Link><p>Overhead and underground water tank cleaning for homes, societies and businesses across Delhi NCR.</p><address className="footer-address"><MapPin size={16} aria-hidden="true"/><span><strong>VSH Water Tank Cleaning</strong>C-194, Bhagwati Vihar, Uttam Nagar, New Delhi, Delhi 110059<br/>2387, Faiz Road, Karol Bagh, New Delhi, Delhi 110005<br/>Sub Branch: Mahipalpur, Delhi 110037</span></address><div className="footer-contact-row"><Phone size={16}/><a href="tel:+919599057079">+91 95990 57079</a></div><p className="footer-hours">Open every day · 9 AM–7 PM</p><a className="footer-whatsapp" href="https://wa.me/919599057079?text=Hi%2C%20I%27d%20like%20to%20book%20tank%20cleaning" target="_blank" rel="noreferrer">WhatsApp our team <ArrowRight size={15}/></a></div><div className="footer-link-column"><strong>Services</strong><Link href="/services">Water tank cleaning</Link><Link href="/services">Overhead tank cleaning</Link><Link href="/services">Underground tank cleaning</Link><Link href="/services">Residential & commercial</Link></div><div className="footer-link-column"><strong>Service areas</strong><Link href="/areas">Delhi</Link><Link href="/areas">Noida, Greater Noida &amp; Ghaziabad</Link><Link href="/areas">Gurgaon &amp; Faridabad</Link></div><div className="footer-link-column"><strong>Help & information</strong><Link href="/prices">Price list</Link><Link href="/prices">Book cleaning</Link><Link href="/processes">Our cleaning process</Link><Link href="/guides">Tank care guides</Link><Link href="/about-us">About VSH</Link><Link href="/contact">Contact</Link></div></div><div className="reference-footer-bottom"><span>© {new Date().getFullYear()} VSH Tank Cleaning</span><span>Clean water starts with a clean tank.</span></div></footer>
 }
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
