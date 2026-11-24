@@ -17,8 +17,8 @@ const overheadCapacities = [
 const undergroundCapacities = [
   { id: 'up-to-1500', label: 'Up to 1,500 L', price: 799, oldPrice: 899, saving: 100 },
   { id: '1501-3000', label: '1,501–3,000 L', price: 1099, oldPrice: 1299, saving: 200 },
-  { id: '3001-5000', label: '3,001–5,000 L', price: 1599, oldPrice: 1899, saving: 300 },
-  { id: '5001-10000', label: '5,001–10,000 L', price: 2599, oldPrice: 3099, saving: 500 },
+  { id: '3001-5000', label: '3,001–5,000 L', price: 1399, oldPrice: 1899, saving: 500 },
+  { id: '5001-10000', label: '5,001–10,000 L', price: 2499, oldPrice: 3099, saving: 600 },
   { id: '10001-15000', label: '10,001–15,000 L', price: 2999, oldPrice: 3699, saving: 700 },
   { id: '15001-20000', label: '15,001–20,000 L', price: 3599, oldPrice: 4499, saving: 900 },
   { id: '20001-30000', label: '20,001–30,000 L', price: 3999, oldPrice: 5099, saving: 1100 },
@@ -59,7 +59,7 @@ export function PriceCalculator() {
       <a className="custom-size-option" href="https://wa.me/919599057079?text=Hi%2C%20I%20need%20a%20quote%20for%20a%20custom%20tank%20size" target="_blank" rel="noreferrer"><span className="whatsapp-mark" aria-hidden="true"><MessageCircle size={18}/></span><span><strong>Other size?</strong><small>Chat on WhatsApp</small></span></a>
     </div>
     <div className="quantity-row"><span><strong>Tanks of this size</strong> in your booking</span><div className="quantity-control"><button type="button" aria-label="Remove one tank from cart" disabled={quantity === 0} onClick={() => decrement(id)}><Minus size={16}/></button><output aria-live="polite">{quantity}</output><button type="button" aria-label="Add one tank to cart" disabled={quantity >= 20} onClick={() => add({ id, name: itemName, price })}><Plus size={16}/></button></div></div>
-    <div className="calculator-actions"><div className="calculator-promo" role="note" aria-label="10 percent flat discount on online booking till tonight"><Sparkles className="calculator-promo-icon" size={19} aria-hidden="true"/><span className="calculator-promo-copy"><strong>10% FLAT DISCOUNT</strong><small>Online booking · Till tonight</small></span></div><Link className="calculator-details" href="/cart">View cart <ArrowRight size={15}/></Link></div>
+    <div className="calculator-actions"><div className="calculator-promo" role="note" aria-label="Pay online to get extra 10 percent off"><Sparkles className="calculator-promo-icon" size={19} aria-hidden="true"/><span className="calculator-promo-copy"><strong>EXTRA 10% OFF</strong><small>Pay Online to get extra 10% off</small></span></div><Link className="calculator-details" href="/cart">View cart <ArrowRight size={15}/></Link></div>
     <form className="area-check" onSubmit={(event) => {
       event.preventDefault()
       const query = area.trim()

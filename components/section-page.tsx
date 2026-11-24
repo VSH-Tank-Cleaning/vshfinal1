@@ -33,8 +33,8 @@ const overheadProducts = [
 const undergroundProducts = [
   { id: 'up-to-1500', label: 'Up to 1,500 L', price: 799, oldPrice: 899, saving: 100 },
   { id: '1501-3000', label: '1,501–3,000 L', price: 1099, oldPrice: 1299, saving: 200 },
-  { id: '3001-5000', label: '3,001–5,000 L', price: 1599, oldPrice: 1899, saving: 300 },
-  { id: '5001-10000', label: '5,001–10,000 L', price: 2599, oldPrice: 3099, saving: 500 },
+  { id: '3001-5000', label: '3,001–5,000 L', price: 1399, oldPrice: 1899, saving: 500 },
+  { id: '5001-10000', label: '5,001–10,000 L', price: 2499, oldPrice: 3099, saving: 600 },
   { id: '10001-15000', label: '10,001–15,000 L', price: 2999, oldPrice: 3699, saving: 700 },
   { id: '15001-20000', label: '15,001–20,000 L', price: 3599, oldPrice: 4499, saving: 900 },
   { id: '20001-30000', label: '20,001–30,000 L', price: 3999, oldPrice: 5099, saving: 1100 },

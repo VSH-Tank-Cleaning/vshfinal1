@@ -36,8 +36,8 @@ const overheadCapacities = [
 const undergroundCapacities = [
   { id: 'up-to-1500', label: 'Up to 1,500 L', price: 799 },
   { id: '1501-3000', label: '1,501–3,000 L', price: 1099 },
-  { id: '3001-5000', label: '3,001–5,000 L', price: 1599 },
-  { id: '5001-10000', label: '5,001–10,000 L', price: 2599 },
+  { id: '3001-5000', label: '3,001–5,000 L', price: 1399 },
+  { id: '5001-10000', label: '5,001–10,000 L', price: 2499 },
   { id: '10001-15000', label: '10,001–15,000 L', price: 2999 },
   { id: '15001-20000', label: '15,001–20,000 L', price: 3599 },
   { id: '20001-30000', label: '20,001–30,000 L', price: 3999 },

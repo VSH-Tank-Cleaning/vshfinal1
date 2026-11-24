@@ -196,6 +196,11 @@ body { color: var(--vsh-ink); font-family: var(--font-inter), "Helvetica Neue", 
 .footer-contact-row { display: flex; align-items: center; gap: 9px; margin-top: 11px; color: #cad9e6; font-size: 12px; }
 .footer-contact-row svg { color: #11bdd6; }
 .footer-contact-row a { color: white; font-weight: 750; }
+.footer-address { display: flex; align-items: flex-start; gap: 9px; max-width: 340px; margin-top: 11px; color: #cad9e6; font-size: 12px; font-style: normal; line-height: 1.65; }
+.footer-address svg { flex-shrink: 0; margin-top: 3px; color: #11bdd6; }
+.footer-address strong { display: block; margin-bottom: 2px; color: white; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
+.footer-hours { margin: 8px 0 0 25px; color: #b6c7d8; font-size: 12px; }
+.footer-offer { display: inline-block; margin: 14px 0 0; padding: 6px 12px; border-radius: 20px; background: rgba(17,189,214,.14); color: #6fe3f2; font-size: 12px; font-weight: 750; }
 .footer-whatsapp { display: inline-flex; align-items: center; gap: 7px; margin-top: 17px; padding: 10px 15px; border-radius: 24px; background: #159b5b; color: white; font-size: 12px; font-weight: 750; }
 .footer-link-column { display: flex; flex-direction: column; align-items: flex-start; gap: 13px; }
 .footer-link-column strong { margin: 3px 0 2px; color: white; font-size: 14px; }
