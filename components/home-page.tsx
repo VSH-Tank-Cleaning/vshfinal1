@@ -7,7 +7,6 @@ import { PriceCalculator } from './price-calculator'
 import { areaSlug, serviceAreaGroups } from '@/lib/service-areas'
 import { BeforeAfterGallery } from './before-after-gallery'
 import { ProcessTimeline } from './process-timeline'
-import { BookingDiscountPromos } from './floating-discount-notifications'
 
 
 
@@ -33,7 +32,6 @@ export function HomePage() {
       <div><span className="proof-icon"><MapPin size={20}/></span><div><strong>Delhi NCR coverage</strong><small>Check your area before booking</small></div></div>
     </section>
 
-    <BookingDiscountPromos />
 
     <section className="reference-section service-intro-section">
       <div className="reference-section-heading"><span className="section-kicker">CLEANING FOR EVERY TANK</span><h2>Water tank cleaning for homes, societies and businesses</h2><p>From a rooftop storage tank to an underground sump, choose the service that fits your property.</p></div>
