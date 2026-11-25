@@ -281,6 +281,7 @@ body { color: var(--vsh-ink); font-family: var(--font-inter), "Helvetica Neue", 
 .price-table-regular { color: #72839a; text-decoration: line-through; }
 .price-table td strong { margin-right: 10px; color: var(--vsh-ink); font-size: 15px; }
 .price-info-section { margin-top: 30px; }
+#price-cancellation-title { scroll-margin-top: 90px; }
 .price-info-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; }
 .price-info-card { min-width: 0; padding: 19px; border: 1px solid #e0e9f0; border-radius: 17px; background: #fbfdff; }
 .price-info-card h3 { margin: 0 0 8px; color: var(--vsh-ink); font-size: 15px; letter-spacing: -.02em; }
