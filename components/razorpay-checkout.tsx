@@ -179,8 +179,26 @@ export function RazorpayCheckout({ items, onPaymentComplete }: { items: BookingI
           <p>Volume offer: 10% on 2 tanks, 12% on 3–5 tanks, and 15% on 6 or more tanks.</p>
         </div>
       </section>
+      <section className="checkout-step" aria-labelledby="checkout-payment-heading">
+        <h4 id="checkout-payment-heading">1. Payment</h4>
+        <fieldset className="razorpay-payment-mode" disabled={processing}>
+          <legend className="sr-only">Choose a payment option</legend>
+          <label className={paymentMode === 'after-service' ? 'selected' : ''}>
+            <input type="radio" name="paymentMode" value="after-service" checked={paymentMode === 'after-service'} onChange={() => setPaymentMode('after-service')} />
+            <span className="payment-option-copy"><strong>Pay after service</strong><small>Cash or UPI once the job is done — ₹{calculateBookingDiscounts(items).total.toLocaleString('en-IN')}.</small></span>
+          </label>
+          <label className={paymentMode === 'advance' ? 'selected' : ''}>
+            <input type="radio" name="paymentMode" value="advance" checked={paymentMode === 'advance'} onChange={() => setPaymentMode('advance')} />
+            <span className="payment-option-copy"><strong>Pay 15% advance <span className="payment-saving">Save ₹{(advanceDiscounts.volumeAmount + advanceDiscounts.advanceAmount).toLocaleString('en-IN')}</span></strong><small>Pay ₹{advanceDiscounts.paymentAmount.toLocaleString('en-IN')} now, get 5% off the order, and pay ₹{advanceDiscounts.balanceAmount.toLocaleString('en-IN')} after service.</small></span>
+          </label>
+          <label className={paymentMode === 'online' ? 'selected' : ''}>
+            <input type="radio" name="paymentMode" value="online" checked={paymentMode === 'online'} onChange={() => setPaymentMode('online')} />
+            <span className="payment-option-copy"><strong>Pay online now <span className="payment-saving">Save ₹{(onlineDiscounts.volumeAmount + onlineDiscounts.onlineAmount).toLocaleString('en-IN')}</span></strong><small>Pay ₹{onlineDiscounts.total.toLocaleString('en-IN')} instead of ₹{onlineDiscounts.subtotal.toLocaleString('en-IN')} — {onlineDiscounts.volumePercent ? `${onlineDiscounts.volumePercent}% multi-tank discount + ` : ''}{onlineDiscounts.onlinePercent}% off for paying online.</small></span>
+          </label>
+        </fieldset>
+      </section>
       <section className="checkout-step" aria-labelledby="checkout-contact-heading">
-        <h4 id="checkout-contact-heading">1. Your details</h4>
+        <h4 id="checkout-contact-heading">2. Your details</h4>
         <div className="razorpay-field-row">
           <div className="razorpay-field">
             <label htmlFor="booking-name">Full name *</label>
@@ -197,7 +215,7 @@ export function RazorpayCheckout({ items, onPaymentComplete }: { items: BookingI
         </div>
       </section>
       <section className="checkout-step" aria-labelledby="checkout-address-heading">
-        <h4 id="checkout-address-heading">2. Service address</h4>
+        <h4 id="checkout-address-heading">3. Service address</h4>
         <div className="razorpay-field">
           <label htmlFor="booking-address">Full address *</label>
           <textarea id="booking-address" name="address" autoComplete="street-address" rows={2} value={customer.address} onChange={(event) => updateCustomer('address', event.target.value)} maxLength={240} required />
@@ -215,7 +233,7 @@ export function RazorpayCheckout({ items, onPaymentComplete }: { items: BookingI
         </div>
       </section>
       <section className="checkout-step" aria-labelledby="checkout-schedule-heading">
-        <h4 id="checkout-schedule-heading">3. Preferred date &amp; time</h4>
+        <h4 id="checkout-schedule-heading">4. Preferred date &amp; time</h4>
         <div className="razorpay-field-row">
           <div className="razorpay-field">
             <label htmlFor="booking-date">Date *</label>
@@ -237,24 +255,6 @@ export function RazorpayCheckout({ items, onPaymentComplete }: { items: BookingI
           <label htmlFor="booking-notes">Special instructions</label>
           <textarea id="booking-notes" name="notes" rows={2} placeholder="Roof access, sump under parked car, society gate pass, pets…" value={customer.notes} onChange={(event) => updateCustomer('notes', event.target.value)} maxLength={200} />
         </div>
-      </section>
-      <section className="checkout-step" aria-labelledby="checkout-payment-heading">
-        <h4 id="checkout-payment-heading">4. Payment</h4>
-        <fieldset className="razorpay-payment-mode" disabled={processing}>
-          <legend className="sr-only">Choose a payment option</legend>
-          <label className={paymentMode === 'after-service' ? 'selected' : ''}>
-            <input type="radio" name="paymentMode" value="after-service" checked={paymentMode === 'after-service'} onChange={() => setPaymentMode('after-service')} />
-            <span className="payment-option-copy"><strong>Pay after service</strong><small>Cash or UPI once the job is done — ₹{calculateBookingDiscounts(items).total.toLocaleString('en-IN')}.</small></span>
-          </label>
-          <label className={paymentMode === 'advance' ? 'selected' : ''}>
-            <input type="radio" name="paymentMode" value="advance" checked={paymentMode === 'advance'} onChange={() => setPaymentMode('advance')} />
-            <span className="payment-option-copy"><strong>Pay 15% advance <span className="payment-saving">Save ₹{(advanceDiscounts.volumeAmount + advanceDiscounts.advanceAmount).toLocaleString('en-IN')}</span></strong><small>Pay ₹{advanceDiscounts.paymentAmount.toLocaleString('en-IN')} now, get 5% off the order, and pay ₹{advanceDiscounts.balanceAmount.toLocaleString('en-IN')} after service.</small></span>
-          </label>
-          <label className={paymentMode === 'online' ? 'selected' : ''}>
-            <input type="radio" name="paymentMode" value="online" checked={paymentMode === 'online'} onChange={() => setPaymentMode('online')} />
-            <span className="payment-option-copy"><strong>Pay online now <span className="payment-saving">Save ₹{(onlineDiscounts.volumeAmount + onlineDiscounts.onlineAmount).toLocaleString('en-IN')}</span></strong><small>Pay ₹{onlineDiscounts.total.toLocaleString('en-IN')} instead of ₹{onlineDiscounts.subtotal.toLocaleString('en-IN')} — {onlineDiscounts.volumePercent ? `${onlineDiscounts.volumePercent}% multi-tank discount + ` : ''}{onlineDiscounts.onlinePercent}% off for paying online.</small></span>
-          </label>
-        </fieldset>
       </section>
       <label className="razorpay-consent"><input type="checkbox" required /><span>I agree that VSH Tank Cleaning may use these details to arrange and confirm my service.</span></label>
       <p className="razorpay-privacy">Your booking details are sent securely to our team and are not used to change your selected prices.</p>
