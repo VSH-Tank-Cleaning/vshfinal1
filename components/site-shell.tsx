@@ -63,6 +63,7 @@ function FloatingActions() {
   }, [pathname])
 
   if (pathname === '/cart' || isContactVisible) return null
+  if (pathname === '/reviews') return <nav className="floating-contact-actions floating-contact-actions--reviews" aria-label="Quick contact"><a className="floating-contact-action floating-contact-whatsapp" aria-label="Chat with VSH on WhatsApp" href="https://wa.me/919599057079?text=Hi%2C%20I%27d%20like%20to%20share%20feedback%20about%20my%20tank%20cleaning" target="_blank" rel="noreferrer"><MessageCircle size={17} aria-hidden="true"/><span>WhatsApp</span></a></nav>
   return <>
     {!isCalculatorVisible && <>
       <nav className="floating-contact-actions" aria-label="Quick contact and offers">
@@ -82,5 +83,5 @@ function Footer() {
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
-  return <CartProvider><Header/><main>{pathname !== '/' && <div className="sitewide-price-calculator"><PriceCalculator /></div>}{children}{pathname !== '/cart' && <BookingDiscountPromos variant="inline" />}</main><Footer/><BookingDiscountPromos/><FloatingActions/></CartProvider>
+  return <CartProvider><Header/><main>{pathname !== '/' && pathname !== '/reviews' && <div className="sitewide-price-calculator"><PriceCalculator /></div>}{children}{pathname !== '/cart' && pathname !== '/reviews' && <BookingDiscountPromos variant="inline" />}</main><Footer/>{pathname !== '/reviews' && <BookingDiscountPromos/>}<FloatingActions/></CartProvider>
 }

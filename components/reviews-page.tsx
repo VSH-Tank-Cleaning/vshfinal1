@@ -1,58 +1,70 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowRight, Check, Clock3, MessageCircle, ShieldCheck, Sparkles } from 'lucide-react'
+import { ArrowRight, Check, Droplets } from 'lucide-react'
 import './reviews-page.css'
 
-const feedbackTopics = [
-  { icon: Clock3, title: 'Was our team on time?', description: 'Tell us how the booking and visit timing worked for you.' },
-  { icon: ShieldCheck, title: 'Did we respect your space?', description: 'Let us know how we handled your home, building and tank area.' },
-  { icon: Sparkles, title: 'Was everything clear?', description: 'Share whether our process and service updates were easy to follow.' },
+const serviceCommitments = [
+  { title: 'Arrive within the confirmed visit window', description: 'We coordinate a suitable time and communicate clearly about the visit.' },
+  { title: 'Confirm pricing before booking', description: 'Tank size and any applicable transport charge are shared upfront.' },
+  { title: 'Clean carefully and explain the work', description: 'Our five-step process includes sludge removal, scrubbing and a thorough rinse.' },
+  { title: 'Share useful service updates', description: 'Ask our team about photo updates during your cleaning.' },
 ]
 
 export function ReviewsPage() {
   return (
     <section className="inner-page reviews-page">
-      <div className="inner-hero reviews-hero">
-        <span className="eyebrow">YOUR EXPERIENCE MATTERS</span>
-        <h1>Good service deserves an honest conversation.</h1>
-        <p>We want every VSH Tank Cleaning visit to feel straightforward, careful and respectful. Your feedback helps us understand what went well and where we can do better.</p>
-      </div>
-
-      <div className="reviews-content">
-        <aside className="reviews-invite">
-          <div className="reviews-invite-mark" aria-hidden="true"><MessageCircle size={25} /></div>
-          <span className="eyebrow">A NOTE TO OUR CUSTOMERS</span>
-          <h2>Tell us about your visit.</h2>
-          <p>Had a recent tank cleaning with our team? Get in touch and share your feedback directly. We read every message and use it to keep improving our service.</p>
-          <a className="button button-primary" href="https://wa.me/919599057079" target="_blank" rel="noreferrer">
-            Share feedback on WhatsApp <ArrowRight size={16} />
-          </a>
-          <a className="reviews-call-link" href="tel:+919599057079">Prefer to call? +91 95990 57079</a>
+      <div className="reviews-summary-grid">
+        <aside className="reviews-summary-card">
+          <span className="reviews-google-label"><span className="reviews-brand-mark">V</span> VSH customer feedback</span>
+          <strong className="reviews-summary-title">Your experience,<br />in your own words.</strong>
+          <p>We welcome honest feedback from customers across Delhi NCR.</p>
+          <a className="reviews-primary-link" href="https://wa.me/919599057079?text=Hi%20VSH%2C%20I%27d%20like%20to%20share%20feedback%20about%20my%20tank%20cleaning." target="_blank" rel="noreferrer">Share feedback <ArrowRight size={16}/></a>
+          <a className="reviews-secondary-link" href="tel:+919599057079">Call VSH Tank Cleaning</a>
+          <small>We only share customer feedback with permission.</small>
         </aside>
-
-        <div className="reviews-detail">
-          <div className="reviews-detail-heading">
-            <span className="eyebrow">WHAT WE CARE ABOUT</span>
-            <h2>Every part of the visit counts.</h2>
-            <p>There is no script to follow. Let us know what your experience was really like.</p>
-          </div>
-          <div className="reviews-topic-list">
-            {feedbackTopics.map(({ icon: Icon, title, description }, index) => (
-              <article className="reviews-topic" key={title}>
-                <span className="reviews-topic-icon"><Icon size={19} /></span>
-                <div><span className="reviews-topic-index">0{index + 1}</span><h3>{title}</h3><p>{description}</p></div>
-                <Check className="reviews-topic-check" size={17} aria-hidden="true" />
-              </article>
-            ))}
-          </div>
-          <div className="reviews-note"><span>VSH</span><p>We do not publish customer names, photos or comments without permission.</p></div>
+        <div className="reviews-summary-story">
+          <span className="eyebrow">HONEST FEEDBACK MATTERS</span>
+          <h1>Read feedback in the customer&apos;s own words.</h1>
+          <p>If you&apos;ve booked with VSH, share your experience directly with our team. We publish customer feedback only when its source is clear and the customer has agreed.</p>
+          <a className="reviews-text-link" href="https://wa.me/919599057079?text=Hi%20VSH%2C%20I%27d%20like%20to%20share%20feedback%20about%20my%20tank%20cleaning." target="_blank" rel="noreferrer">Message us on WhatsApp <ArrowRight size={16}/></a>
         </div>
       </div>
 
+      <section className="reviews-copy-section" aria-labelledby="reviews-why-title">
+        <h2 id="reviews-why-title">Why we keep reviews honest</h2>
+        <p>Ratings and testimonials should reflect real customer experiences. We share feedback only when its source is clear, and ask permission before publishing a customer&apos;s comment, name or photo.</p>
+        <ul className="reviews-principles">
+          <li><Check size={17}/><span><strong>Honest feedback only.</strong> We don&apos;t publish invented quotes or unverified ratings.</span></li>
+          <li><Check size={17}/><span><strong>Your words stay yours.</strong> We ask before sharing a customer comment, name or photo.</span></li>
+          <li><Check size={17}/><span><strong>We welcome all feedback.</strong> Tell us what went well or where we can improve.</span></li>
+        </ul>
+      </section>
+
+      <section className="reviews-copy-section reviews-commitments" aria-labelledby="reviews-commitments-title">
+        <h2 id="reviews-commitments-title">What to expect from the VSH team</h2>
+        <p>Here are the service details we work to get right on every visit in Delhi NCR:</p>
+        <ul className="reviews-principles">
+          {serviceCommitments.map(({ title, description }, index) => (
+            <li key={title}><span className="reviews-list-dot">{index + 1}</span><span><strong>{title}</strong> — {description}</span></li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="reviews-copy-section reviews-contact-block" aria-labelledby="reviews-recent-title">
+        <h2 id="reviews-recent-title">Had a VSH cleaning recently?</h2>
+        <p>Your feedback helps us improve our tank cleaning service for homes, housing societies and businesses across Delhi NCR. Send our team a message or call us at <a href="tel:+919599057079">+91 95990 57079</a>.</p>
+      </section>
+
+      <section className="reviews-copy-section reviews-contact-block" aria-labelledby="reviews-help-title">
+        <h2 id="reviews-help-title">Need help with a visit?</h2>
+        <p>Please contact us directly with your booking details so we can understand the issue and help. Call <a href="tel:+919599057079">+91 95990 57079</a> or <a href="https://wa.me/919599057079" target="_blank" rel="noreferrer">message VSH on WhatsApp</a>.</p>
+      </section>
+
       <div className="reviews-bottom-cta">
-        <div><span className="eyebrow">READY FOR YOUR NEXT CLEAN?</span><h2>Thoughtful tank care, from the first call.</h2></div>
-        <Link className="button button-primary" href="/contact">Plan a visit <ArrowRight size={16} /></Link>
+        <span className="reviews-bottom-icon" aria-hidden="true"><Droplets size={23}/></span>
+        <div><span className="eyebrow">VSH TANK CLEANING · DELHI NCR</span><h2>Clear pricing. Careful tank cleaning.</h2><p>Tell us your area, tank type and capacity to plan a visit.</p></div>
+        <Link className="button button-primary" href="/contact">Contact VSH <ArrowRight size={16}/></Link>
       </div>
     </section>
   )
