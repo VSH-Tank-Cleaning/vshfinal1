@@ -5,36 +5,7 @@ import { ArrowLeftRight, ArrowRight, Check } from 'lucide-react'
 import Link from 'next/link'
 import { BeforeAfterGallery } from './before-after-gallery'
 import { BookingDiscountPromos } from './floating-discount-notifications'
-
-const cleaningSteps = [
-  {
-    title: 'Drain the tank',
-    description: 'We switch off the pump that fills the tank, close the inlet, and drain the water so the floor, walls and corners are exposed.',
-    why: 'With the tank empty, our team can clean its surfaces and inspect the sludge, fittings, lid and overall condition.',
-    before: 'Fill a few buckets if you will need water while the cleaning is underway.',
-  },
-  {
-    title: 'Vacuum out settled sludge',
-    description: 'A vacuum machine lifts settled silt, organic matter and dead biofilm from the tank.',
-    why: 'Removing sludge first keeps it from being stirred back into the water or flushed into pipes, taps, the geyser or RO filter.',
-  },
-  {
-    title: 'Apply suitable tank treatments',
-    description: 'We apply treatment to the tank walls, floor, corners and ceiling, as appropriate for the tank and the service.',
-    treatments: ['Hard-water stain remover', 'Antibacterial treatment'],
-    why: 'The treatments help remove hard-water deposits and target bacteria on tank surfaces.',
-  },
-  {
-    title: 'Scrub and wash',
-    description: 'We scrub and wash the walls, floor, corners and ceiling, paying close attention to the underside of the lid, inlet, float valve and floor joints.',
-    why: 'Scrubbing breaks up biofilm that clings to tank surfaces. For plastic tanks, we use soft brushes and controlled pressure to avoid scratching the inner surface.',
-  },
-  {
-    title: 'Share photo proof and hand over',
-    description: 'We send before-and-after photos on WhatsApp, secure the lid or manhole cover, reopen the inlet and leave the tank ready to refill.',
-    why: 'Photos let you confirm the work, compare future cleanings and keep a service record for your home, RWA or business.',
-  },
-]
+import { cleaningProcessSteps } from './process-timeline'
 
 const visitRequirements = [
   'Access to the tank (roof key, manhole cleared of vehicles).',
@@ -51,7 +22,7 @@ function CleaningProcessSteps() {
       <p>Every visit follows a careful sequence, from draining and sludge removal to a clean handover.</p>
     </div>
     <ol className="process-step-list">
-      {cleaningSteps.map((step, index) => <li className="process-step-card" key={step.title}>
+      {cleaningProcessSteps.map((step, index) => <li className="process-step-card" key={step.title}>
         <span className="process-step-number" aria-hidden="true">{index + 1}</span>
         <div className="process-step-body">
           <h3>{step.title}</h3>

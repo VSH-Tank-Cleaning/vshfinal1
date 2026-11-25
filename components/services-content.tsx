@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { ArrowRight, Check, Plus, ShieldCheck } from 'lucide-react'
 import { useCart } from './tank-cart'
 import { BeforeAfterGallery } from './before-after-gallery'
+import { cleaningProcessSteps } from './process-timeline'
 import { TransportChargesTable } from './transport-charges-table'
 
 const overheadTanks = [
@@ -22,13 +23,6 @@ const undergroundTanks = [
   { id: '10001-15000', size: '10,001–15,000 L', regular: 3699, price: 2999, saving: 700 },
   { id: '15001-20000', size: '15,001–20,000 L', regular: 4499, price: 3599, saving: 900 },
   { id: '20001-30000', size: '20,001–30,000 L', regular: 5099, price: 3999, saving: 1100 },
-]
-const methodSteps = [
-  ['Drain the tank', 'Remaining water is pumped out so the floor and walls are exposed. Tell us beforehand if you want water saved in buckets.'],
-  ['Vacuum the sludge', 'Settled mud, silt and slime are lifted out with a vacuum machine instead of being stirred back into the water.'],
-  ['Pressure-wash & scrub', 'Walls, floor, corners, lid and inlet area are scrubbed and jet-washed to loosen biofilm and algae.'],
-  ['Disinfect and rinse', 'An anti-bacterial disinfectant is applied to cleaned surfaces, then the tank is rinsed before refilling.'],
-  ['Photo proof & handover', 'You receive before-and-after photos on WhatsApp. The lid is closed properly and the tank is ready to refill.'],
 ]
 
 export function ServicesContent() {
@@ -70,7 +64,7 @@ export function ServicesContent() {
 
     <section className="services-section" aria-labelledby="method-title">
       <div className="services-section-heading"><span className="eyebrow">THE VSH TANK CLEANING METHOD</span><h2 id="method-title">A thorough clean, in five steps</h2></div>
-      <div className="method-grid">{methodSteps.map(([title, description], index) => <article className="method-card" key={title}><span className="method-number">0{index + 1}</span><h3>{title}</h3><p>{description}</p></article>)}</div>
+      <div className="method-grid">{cleaningProcessSteps.map((step) => <article className="method-card" key={step.number}><span className="method-number">{step.number}</span><h3>{step.title}</h3><p>{step.description}</p></article>)}</div>
       <div className="services-detail-grid">
         <article><span className="eyebrow">WHY SLUDGE REMOVAL COMES FIRST</span><h3>Lift it out, don’t stir it up.</h3><p>The most common shortcut is skipping proper sludge removal. Scrubbing with sludge on the floor churns it into suspension: some drains out, much settles again after refilling. We vacuum the sludge before scrubbing, so water stays clear instead of clouding the next day.</p></article>
         <article><span className="eyebrow">DETAILS THAT MATTER</span><h3>Walls, corners, fittings and a proper rinse.</h3><p>We pay particular attention to the underside of the lid, inlet, float valve, overflow, and the joints where walls meet the floor. Disinfectant is applied only after surfaces are clean, allowed its contact time, then rinsed before refilling. You receive before-and-after photos on WhatsApp — especially useful for tanks on roofs or beneath slabs.</p></article>
