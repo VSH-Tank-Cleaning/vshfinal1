@@ -31,49 +31,16 @@ function Header() {
 
 function FloatingActions() {
   const pathname = usePathname()
-  const [isContactVisible, setIsContactVisible] = useState(false)
-  const [isCalculatorVisible, setIsCalculatorVisible] = useState(false)
+  if (pathname === '/cart') return null
 
-  useEffect(() => {
-    const section = document.getElementById('contact-form')
-    if (!section) {
-      setIsContactVisible(false)
-      return
-    }
-
-    const observer = new IntersectionObserver(([entry]) => {
-      setIsContactVisible(entry.isIntersecting)
-    }, { threshold: 0.01 })
-    observer.observe(section)
-    return () => observer.disconnect()
-  }, [pathname])
-
-  useEffect(() => {
-    const calculator = document.querySelector('.price-calculator')
-    if (!calculator) {
-      setIsCalculatorVisible(false)
-      return
-    }
-
-    const observer = new IntersectionObserver(([entry]) => {
-      setIsCalculatorVisible(entry.isIntersecting)
-    }, { threshold: 0.01 })
-    observer.observe(calculator)
-    return () => observer.disconnect()
-  }, [pathname])
-
-  if (pathname === '/cart' || isContactVisible) return null
-  if (pathname === '/reviews') return <div className="reviews-floating-actions"><div className="reviews-floating-action-row"><ContactQuestion/></div><BookingDiscountPromos variant="review-stack"/><div className="reviews-floating-action-row"><Link className="floating-contact-action floating-contact-book" href="/prices"><ArrowRight size={17} aria-hidden="true"/><span>Book now</span></Link></div></div>
   return <>
-    {!isCalculatorVisible && <>
-      <nav className="floating-contact-actions" aria-label="Quick contact and offers">
-        <Link className="floating-contact-action floating-contact-book" href="/prices"><ArrowRight size={17} aria-hidden="true"/><span>Book now</span></Link>
-        <BookingDiscountPromos variant="mobile-actions" />
-        <a className="floating-contact-action floating-contact-call" href="tel:9599057079" aria-label="Call VSH Tank Cleaning"><Phone size={17} aria-hidden="true"/><span>Call us</span></a>
-        <a className="floating-contact-action floating-contact-whatsapp" aria-label="Chat with VSH on WhatsApp" href="https://wa.me/919599057079?text=Hi%2C%20I%27d%20like%20to%20book%20tank%20cleaning" target="_blank" rel="noreferrer"><MessageCircle size={17} aria-hidden="true"/><span>WhatsApp</span></a>
-      </nav>
-      <ContactQuestion />
-    </>}
+    <nav className="floating-contact-actions" aria-label="Quick contact and offers">
+      <Link className="floating-contact-action floating-contact-book" href="/prices"><ArrowRight size={17} aria-hidden="true"/><span>Book now</span></Link>
+      <a className="floating-contact-action floating-contact-call" href="tel:9599057079" aria-label="Call VSH Tank Cleaning"><Phone size={17} aria-hidden="true"/><span>Call us</span></a>
+      <a className="floating-contact-action floating-contact-whatsapp" aria-label="Chat with VSH on WhatsApp" href="https://wa.me/919599057079?text=Hi%2C%20I%27d%20like%20to%20book%20tank%20cleaning" target="_blank" rel="noreferrer"><MessageCircle size={17} aria-hidden="true"/><span>WhatsApp</span></a>
+    </nav>
+    <BookingDiscountPromos variant="mobile-actions" />
+    <ContactQuestion />
   </>
 }
 
@@ -83,5 +50,5 @@ function Footer() {
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
-  return <CartProvider><Header/><main>{pathname !== '/' && pathname !== '/reviews' && <div className="sitewide-price-calculator"><PriceCalculator /></div>}{children}{pathname !== '/cart' && pathname !== '/reviews' && <BookingDiscountPromos variant="inline" />}</main><Footer/>{pathname !== '/reviews' && <BookingDiscountPromos/>}<FloatingActions/></CartProvider>
+  return <CartProvider><Header/><main>{pathname !== '/' && pathname !== '/reviews' && <div className="sitewide-price-calculator"><PriceCalculator /></div>}{children}{pathname !== '/cart' && pathname !== '/reviews' && <BookingDiscountPromos variant="inline" />}</main><Footer/><BookingDiscountPromos/><FloatingActions/></CartProvider>
 }

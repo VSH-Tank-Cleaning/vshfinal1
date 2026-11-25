@@ -32,13 +32,4 @@
 .reviews-bottom-cta h2 { margin: 7px 0 4px; color: #102137; font-size: 22px; letter-spacing: -.035em; }
 .reviews-bottom-cta p { margin: 0; color: #647184; font-size: 12px; }
 .reviews-bottom-cta .button { flex: 0 0 auto; color: #fff; background: #087be1; }
-.reviews-floating-actions { position: fixed; right: 50%; bottom: 14px; z-index: 60; display: flex; width: min(280px,calc(100% - 28px)); flex-direction: column; align-items: center; gap: 8px; padding: 9px; transform: translateX(50%); border: 1px solid #e4e9ef; border-radius: 18px; background: rgba(255,255,255,.96); box-shadow: 0 10px 30px rgba(20,38,58,.16); backdrop-filter: blur(12px); }
-.reviews-floating-actions .booking-discount-promos--review-stack { position: static; display: flex; width: 100%; justify-content: center; margin: 0; padding: 0; }
-.reviews-floating-actions .booking-discount-grid { gap: 8px; }
-.reviews-floating-actions .booking-discount-card { width: 56px; height: 56px; }
-.reviews-floating-action-row { display: flex; width: 100%; gap: 8px; }
-.reviews-floating-action-row .floating-question-trigger,.reviews-floating-action-row .floating-contact-book { position: static; display: inline-flex; flex: 1; min-height: 42px; align-items: center; justify-content: center; gap: 7px; margin: 0; padding: 0 10px; border: 1px solid #087be1; border-radius: 10px; background: #fff; color: #075eae; box-shadow: none; font-size: 12px; font-weight: 750; white-space: nowrap; }
-.reviews-floating-action-row .floating-contact-book { background: #087be1; color: #fff; }
-.reviews-floating-action-row .floating-question-trigger:hover,.reviews-floating-action-row .floating-contact-book:hover { transform: translateY(-1px); box-shadow: 0 5px 14px rgba(8,123,225,.18); }
 @media (max-width: 700px) { .reviews-page { padding: 36px 5% 170px; }.reviews-summary-grid { grid-template-columns: 1fr; gap: 15px; }.reviews-summary-card,.reviews-summary-story { padding: 22px; border-radius: 14px; }.reviews-summary-title { margin-top: 14px; font-size: 29px; }.reviews-summary-story h1 { font-size: 30px; }.reviews-copy-section,.reviews-contact-block { margin-top: 15px; padding: 20px; border-radius: 14px; }.reviews-copy-section h2 { font-size: 25px; }.reviews-principles { gap: 10px; margin-top: 15px; }.reviews-principles li { gap: 9px; font-size: 13px; }.reviews-bottom-cta { align-items: flex-start; flex-wrap: wrap; gap: 14px; margin-top: 15px; padding: 19px; }.reviews-bottom-cta>div { flex-basis: calc(100% - 70px); }.reviews-bottom-cta h2 { font-size: 20px; }.reviews-bottom-cta .button { margin-left: 64px; } }
-@media (max-width: 600px) { .reviews-floating-actions { bottom: calc(12px + env(safe-area-inset-bottom)); } }
