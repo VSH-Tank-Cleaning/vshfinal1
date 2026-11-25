@@ -32,7 +32,7 @@
 .reviews-bottom-cta h2 { margin: 7px 0 4px; color: #102137; font-size: 22px; letter-spacing: -.035em; }
 .reviews-bottom-cta p { margin: 0; color: #647184; font-size: 12px; }
 .reviews-bottom-cta .button { flex: 0 0 auto; color: #fff; background: #087be1; }
-.reviews-floating-actions { position: fixed; right: 50%; bottom: 14px; z-index: 60; display: flex; width: min(400px,calc(100% - 28px)); flex-direction: column; align-items: center; gap: 8px; padding: 9px; transform: translateX(50%); border: 1px solid #e4e9ef; border-radius: 18px; background: rgba(255,255,255,.96); box-shadow: 0 10px 30px rgba(20,38,58,.16); backdrop-filter: blur(12px); }
+.reviews-floating-actions { position: fixed; right: 50%; bottom: 14px; z-index: 60; display: flex; width: min(280px,calc(100% - 28px)); flex-direction: column; align-items: center; gap: 8px; padding: 9px; transform: translateX(50%); border: 1px solid #e4e9ef; border-radius: 18px; background: rgba(255,255,255,.96); box-shadow: 0 10px 30px rgba(20,38,58,.16); backdrop-filter: blur(12px); }
 .reviews-floating-actions .booking-discount-promos--review-stack { position: static; display: flex; width: 100%; justify-content: center; margin: 0; padding: 0; }
 .reviews-floating-actions .booking-discount-grid { gap: 8px; }
 .reviews-floating-actions .booking-discount-card { width: 56px; height: 56px; }

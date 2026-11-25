@@ -63,7 +63,7 @@ function FloatingActions() {
   }, [pathname])
 
   if (pathname === '/cart' || isContactVisible) return null
-  if (pathname === '/reviews') return <div className="reviews-floating-actions"><BookingDiscountPromos variant="review-stack"/><div className="reviews-floating-action-row"><ContactQuestion/><Link className="floating-contact-action floating-contact-book" href="/prices"><ArrowRight size={17} aria-hidden="true"/><span>Book now</span></Link></div></div>
+  if (pathname === '/reviews') return <div className="reviews-floating-actions"><div className="reviews-floating-action-row"><ContactQuestion/></div><BookingDiscountPromos variant="review-stack"/><div className="reviews-floating-action-row"><Link className="floating-contact-action floating-contact-book" href="/prices"><ArrowRight size={17} aria-hidden="true"/><span>Book now</span></Link></div></div>
   return <>
     {!isCalculatorVisible && <>
       <nav className="floating-contact-actions" aria-label="Quick contact and offers">
