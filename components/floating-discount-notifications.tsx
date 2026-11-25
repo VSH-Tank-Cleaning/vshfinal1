@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { Layers3, Percent } from 'lucide-react'
 
-export function BookingDiscountPromos({ variant = 'floating' }: { variant?: 'floating' | 'inline' | 'mobile-actions' }) {
+export function BookingDiscountPromos({ variant = 'floating' }: { variant?: 'floating' | 'inline' | 'mobile-actions' | 'review-stack' }) {
   return <section className={`booking-discount-promos booking-discount-promos--${variant}`} aria-label="Booking discounts">
     <div className="booking-discount-grid">
       <Link className="booking-discount-card" href="/prices" aria-label="Get an extra 10 percent off when you pay online. View prices.">

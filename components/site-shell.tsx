@@ -63,7 +63,7 @@ function FloatingActions() {
   }, [pathname])
 
   if (pathname === '/cart' || isContactVisible) return null
-  if (pathname === '/reviews') return <nav className="floating-contact-actions floating-contact-actions--reviews" aria-label="Quick contact"><a className="floating-contact-action floating-contact-whatsapp" aria-label="Chat with VSH on WhatsApp" href="https://wa.me/919599057079?text=Hi%2C%20I%27d%20like%20to%20share%20feedback%20about%20my%20tank%20cleaning" target="_blank" rel="noreferrer"><MessageCircle size={17} aria-hidden="true"/><span>WhatsApp</span></a></nav>
+  if (pathname === '/reviews') return <div className="reviews-floating-actions"><BookingDiscountPromos variant="review-stack"/><div className="reviews-floating-action-row"><ContactQuestion/><Link className="floating-contact-action floating-contact-book" href="/prices"><ArrowRight size={17} aria-hidden="true"/><span>Book now</span></Link></div></div>
   return <>
     {!isCalculatorVisible && <>
       <nav className="floating-contact-actions" aria-label="Quick contact and offers">
