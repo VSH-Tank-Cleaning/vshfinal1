@@ -740,4 +740,5 @@ body { background: var(--vsh-page-fade); background-attachment: fixed; min-heigh
 .about-address-card { border: 1px solid #dce7f1; box-shadow: 0 9px 25px rgba(16,45,75,.06); }
 .service-audience { background: linear-gradient(115deg,#e6f6fd 0%,#f5fbff 55%,#ffffff 100%); border: 1px solid #e1eef7; }
 .tank-type-option.selected { background: linear-gradient(115deg,#e3f3ff 0%,#f4faff 60%,#ffffff 100%); }
-@media (max-width: 600px) { .steps-timeline { grid-template-columns: minmax(0,1fr); }.timeline-step:after { display: none; } }
+.process-visual-page .services-signs { width: 100%; margin: 0 auto 42px; }
+@media (max-width: 600px) { .steps-timeline { grid-template-columns: minmax(0,1fr); }.timeline-step:after { display: none; }.process-visual-page .services-signs { margin-bottom: 32px; } }

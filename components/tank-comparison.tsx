@@ -4,8 +4,8 @@ import { useState } from 'react'
 import { ArrowLeftRight, ArrowRight, Check } from 'lucide-react'
 import Link from 'next/link'
 import { BeforeAfterGallery } from './before-after-gallery'
-import { BookingDiscountPromos } from './floating-discount-notifications'
 import { cleaningProcessSteps } from './process-timeline'
+import { TankCleaningSigns } from './tank-cleaning-signs'
 
 const visitRequirements = [
   'Access to the tank (roof key, manhole cleared of vehicles).',
@@ -71,7 +71,7 @@ export function TankComparison() {
 
   return <section className="process-visual-page" aria-labelledby="process-visual-title">
     <PreparationRequirements />
-    <BookingDiscountPromos variant="inline" />
+    <TankCleaningSigns />
     <CleaningProcessSteps />
     <BeforeAfterGallery />
     <div className="process-visual-heading">
