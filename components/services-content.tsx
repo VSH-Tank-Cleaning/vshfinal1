@@ -43,6 +43,8 @@ export function ServicesContent() {
       <p>A professional service matters because the problem inside a storage tank isn’t just visible dirt. Fine sediment settles into a soft layer on the floor, bacteria colonise the walls in a slimy film called biofilm, and light entering through a translucent wall or gap in the lid feeds algae. Each layer protects the next from chlorine in the supply water. Removing them needs the right sequence and equipment, not just effort.</p>
     </section>
 
+    <section className="services-signs" aria-labelledby="signs-title"><div><span className="eyebrow">WHEN TO BOOK A CLEAN</span><h2 id="signs-title">Signs your tank needs cleaning now</h2></div><ul><li>The water smells musty, earthy or like rotten eggs.</li><li>You see particles, a yellow or brown tint, or green specks in a white bucket.</li><li>Your RO pre-filter or tap aerators clog much faster than usual.</li><li>The tank hasn’t been cleaned in the last six months, or you don’t know when it was last cleaned.</li><li>Water entered the tank during the monsoon, or the lid was left open.</li><li>You’ve moved into a new home or office.</li></ul></section>
+
     <BeforeAfterGallery />
 
     <section className="services-section" aria-labelledby="service-types-title">
@@ -88,6 +90,5 @@ export function ServicesContent() {
       <p className="services-pricing-note">The exact charge is confirmed for your PIN code before booking and is applied once per visit, not per tank.</p>
     </section>
 
-    <section className="services-signs" aria-labelledby="signs-title"><div><span className="eyebrow">WHEN TO BOOK A CLEAN</span><h2 id="signs-title">Signs your tank needs cleaning now</h2></div><ul><li>The water smells musty, earthy or like rotten eggs.</li><li>You see particles, a yellow or brown tint, or green specks in a white bucket.</li><li>Your RO pre-filter or tap aerators clog much faster than usual.</li><li>The tank hasn’t been cleaned in the last six months, or you don’t know when it was last cleaned.</li><li>Water entered the tank during the monsoon, or the lid was left open.</li><li>You’ve moved into a new home or office.</li></ul></section>
   </div>
 }
