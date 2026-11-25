@@ -2,6 +2,7 @@ import { createHash, randomInt } from 'node:crypto'
 import { isSupportedPincode } from './service-areas'
 
 export type BookingItem = { id: string; qty: number }
+export type PaymentMode = 'online' | 'advance' | 'after-service'
 
 export type CustomerDetails = {
   name: string
@@ -22,7 +23,11 @@ export type BookingDiscounts = {
   volumeAmount: number
   onlinePercent: number
   onlineAmount: number
+  advancePercent: number
+  advanceAmount: number
   total: number
+  paymentAmount: number
+  balanceAmount: number
 }
 
 const timeSlots = ['8:00 AM – 10:00 AM', '10:00 AM – 12:00 PM', '12:00 PM – 2:00 PM', '2:00 PM – 4:00 PM', '6:00 PM – 8:00 PM']
@@ -84,7 +89,8 @@ export function parseBookingItems(value: unknown): BookingItem[] | null {
   return items
 }
 
-export function calculateBookingDiscounts(items: BookingItem[], online = false): BookingDiscounts {
+export function calculateBookingDiscounts(items: BookingItem[], mode: PaymentMode | boolean = 'after-service'): BookingDiscounts {
+  const paymentMode = typeof mode === 'boolean' ? mode ? 'online' : 'after-service' : mode
   const subtotal = items.reduce((total, item) => total + (getUnitPrice(item.id) ?? 0) * item.qty, 0)
   const tankItems = items.filter((item) => /^(overhead|underground)-/.test(item.id) || item.id === 'cement-tank')
   const tankSubtotal = tankItems.reduce((total, item) => total + (getUnitPrice(item.id) ?? 0) * item.qty, 0)
@@ -92,14 +98,18 @@ export function calculateBookingDiscounts(items: BookingItem[], online = false):
   const volumePercent = tankCount > 5 ? 15 : tankCount >= 3 ? 12 : tankCount === 2 ? 10 : 0
   const volumeAmount = Math.round(tankSubtotal * volumePercent / 100)
   const afterVolume = subtotal - volumeAmount
-  const onlinePercent = online ? 10 : 0
+  const onlinePercent = paymentMode === 'online' ? 10 : 0
   const onlineAmount = Math.round(afterVolume * onlinePercent / 100)
+  const advancePercent = paymentMode === 'advance' ? 5 : 0
+  const advanceAmount = Math.round(afterVolume * advancePercent / 100)
+  const total = afterVolume - onlineAmount - advanceAmount
+  const paymentAmount = paymentMode === 'online' ? total : paymentMode === 'advance' ? Math.round(total * 15 / 100) : 0
 
-  return { subtotal, tankCount, volumePercent, volumeAmount, onlinePercent, onlineAmount, total: afterVolume - onlineAmount }
+  return { subtotal, tankCount, volumePercent, volumeAmount, onlinePercent, onlineAmount, advancePercent, advanceAmount, total, paymentAmount, balanceAmount: total - paymentAmount }
 }
 
-export function calculateBookingTotal(items: BookingItem[], online = false): number {
-  return calculateBookingDiscounts(items, online).total
+export function calculateBookingTotal(items: BookingItem[], mode: PaymentMode | boolean = false): number {
+  return calculateBookingDiscounts(items, mode).total
 }
 
 function cleanText(value: unknown, maxLength: number): string | null {

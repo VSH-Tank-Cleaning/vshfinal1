@@ -1,7 +1,7 @@
 import type { BookingItem, CustomerDetails } from '@/lib/razorpay'
 import { calculateBookingDiscounts, calculateBookingTotal } from '@/lib/razorpay'
 
-type BookingPaymentStatus = 'paid' | 'due-after-service'
+type BookingPaymentStatus = 'paid' | 'advance-paid' | 'due-after-service'
 
 type BookingNotification = {
   customer: CustomerDetails
@@ -29,10 +29,11 @@ export async function sendBookingNotification({
   const itemDetails = items
     .map(({ id, qty }) => `${id.replaceAll('-', ' ')} × ${qty}`)
     .join('\n')
-  const discounts = calculateBookingDiscounts(items, paymentStatus === 'paid')
-  const amount = calculateBookingTotal(items, paymentStatus === 'paid')
+  const paymentMode = paymentStatus === 'paid' ? 'online' : paymentStatus === 'advance-paid' ? 'advance' : 'after-service'
+  const discounts = calculateBookingDiscounts(items, paymentMode)
+  const amount = calculateBookingTotal(items, paymentMode)
   const emailText = [
-    paymentStatus === 'paid' ? 'A tank cleaning booking has been paid online.' : 'A tank cleaning booking is due for payment after service.',
+    paymentStatus === 'paid' ? 'A tank cleaning booking has been paid online.' : paymentStatus === 'advance-paid' ? 'A 15% advance payment has been received; the remaining balance is due after service.' : 'A tank cleaning booking is due for payment after service.',
     `Booking ID: ${bookingId}`,
     '',
     `Customer: ${customer.name}`,
@@ -51,8 +52,10 @@ export async function sendBookingNotification({
     `Subtotal: ₹${discounts.subtotal.toLocaleString('en-IN')}`,
     ...(discounts.volumeAmount > 0 ? [`Multi-tank discount (${discounts.volumePercent}%): −₹${discounts.volumeAmount.toLocaleString('en-IN')}`] : []),
     ...(discounts.onlineAmount > 0 ? [`Online payment discount (${discounts.onlinePercent}%): −₹${discounts.onlineAmount.toLocaleString('en-IN')}`] : []),
-    `Total: ₹${amount.toLocaleString('en-IN')}`,
-    `Payment: ${paymentStatus === 'paid' ? 'Paid online' : 'Due after service'}`,
+    ...(discounts.advanceAmount > 0 ? [`Advance payment discount (${discounts.advancePercent}%): −₹${discounts.advanceAmount.toLocaleString('en-IN')}`] : []),
+    `Order total after discounts: ₹${amount.toLocaleString('en-IN')}`,
+    ...(paymentStatus === 'advance-paid' ? [`Advance paid now: ₹${discounts.paymentAmount.toLocaleString('en-IN')}`, `Balance due after service: ₹${discounts.balanceAmount.toLocaleString('en-IN')}`] : []),
+    `Payment: ${paymentStatus === 'paid' ? 'Paid online' : paymentStatus === 'advance-paid' ? '15% advance paid; balance due after service' : 'Due after service'}`,
     ...(paymentId ? [`Razorpay payment ID: ${paymentId}`] : []),
   ].join('\n')
 

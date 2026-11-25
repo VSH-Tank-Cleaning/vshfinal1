@@ -5,13 +5,15 @@ import Link from 'next/link'
 import { TankComparison } from './tank-comparison'
 import { ArrowRight, Check, ChevronRight, CircleHelp, Clock3, MapPin, Minus, Plus, ShieldCheck, Star, Trash2 } from 'lucide-react'
 import { useCart } from './tank-cart'
-import { RazorpayCheckout, type PaymentMode } from './razorpay-checkout'
+import { RazorpayCheckout } from './razorpay-checkout'
+import type { PaymentMode } from '@/lib/razorpay'
 import { GuideLibrary } from './guide-library'
 import { ServicesContent } from './services-content'
 import { TransportChargesTable } from './transport-charges-table'
 import { areaSlug, serviceAreaGroups } from '@/lib/service-areas'
 import { ContactForm } from './contact-question'
 import { AboutUsPage } from './about-us-page'
+import { ReviewsPage } from './reviews-page'
 
 const pages: Record<string, { title: string; kicker: string; intro: string; paragraphs: string[]; items: string[] }> = {
   areas: { kicker: 'WHERE WE WORK', title: 'Water tank cleaning across Delhi NCR', intro: 'VSH Tank Cleaning is based in Uttam Nagar, West Delhi, and serves homes, housing societies and workplaces across Delhi NCR. Browse the areas below to find your neighbourhood.', paragraphs: ['We clean rooftop and loft tanks as well as underground sumps for homes, apartments and commercial properties. Share your PIN code when you enquire so we can confirm local availability, access arrangements and any transport charge before your visit.'], items: [] },
@@ -60,12 +62,13 @@ function FreshStartCTA({ href, label }: { href: string; label: string }) {
 function CartPage() {
   const { items, total, remove, clear } = useCart()
   const [confirmation, setConfirmation] = useState<{ mode: PaymentMode; bookingId: string } | null>(null)
-  if (confirmation) return <section className="inner-page"><div className="payment-success"><div className="empty-cart-icon"><Check size={25}/></div><span className="eyebrow">{confirmation.mode === 'online' ? 'PAYMENT CONFIRMED' : 'BOOKING RECEIVED'}</span><h1>Thank you for your booking.</h1><p>{confirmation.mode === 'online' ? 'Your payment has been verified. ' : 'Your request has been sent to our team. No payment has been taken; please pay after the service. '}Our team will contact you to confirm the visit time and access details.</p><div className="booking-confirmation-id"><span>Your booking ID</span><strong>{confirmation.bookingId}</strong><small>Keep this ID for any questions or changes to your visit.</small></div><Link className="button button-primary" href="/">Back to home <ArrowRight size={16}/></Link></div></section>
+  if (confirmation) return <section className="inner-page"><div className="payment-success"><div className="empty-cart-icon"><Check size={25}/></div><span className="eyebrow">{confirmation.mode === 'online' ? 'PAYMENT CONFIRMED' : confirmation.mode === 'advance' ? 'ADVANCE PAYMENT CONFIRMED' : 'BOOKING RECEIVED'}</span><h1>Thank you for your booking.</h1><p>{confirmation.mode === 'online' ? 'Your payment has been verified. ' : confirmation.mode === 'advance' ? 'Your 15% advance payment has been verified. The discounted balance is due after service. ' : 'Your request has been sent to our team. No payment has been taken; please pay after the service. '}Our team will contact you to confirm the visit time and access details.</p><div className="booking-confirmation-id"><span>Your booking ID</span><strong>{confirmation.bookingId}</strong><small>Keep this ID for any questions or changes to your visit.</small></div><Link className="button button-primary" href="/">Back to home <ArrowRight size={16}/></Link></div></section>
   return <section className="inner-page checkout-page"><div className="inner-hero checkout-hero"><div><span className="eyebrow">YOUR NEXT FRESH START</span><h1>Let’s get your tank <em>sparkling.</em></h1><p>Pick your service, tell us where to visit, and choose the payment option that works for you.</p></div><div className="checkout-hero-note"><span><ShieldCheck size={18}/></span><p><b>Secure details. Straightforward service.</b><small>We confirm your visit before any cleaning begins.</small></p></div></div>{items.length ? <><div className="cart-layout"><div className="product-list">{items.map((item) => <article className="product-row" key={item.id}><div className="product-symbol"><ShieldCheck size={19}/></div><div className="product-name"><b>{item.name}</b><span>Quantity: {item.qty}</span></div><strong>₹{item.price * item.qty}</strong><button className="remove-button" onClick={() => remove(item.id)} aria-label={`Remove ${item.name}`}><Trash2 size={17}/></button></article>)}</div><aside className="cart-summary"><span className="eyebrow">ORDER SUMMARY</span><h2>Booking summary</h2><div className="summary-line"><span>Items</span><b>{items.reduce((sum, item) => sum + item.qty, 0)}</b></div><div className="summary-line summary-total"><span>Subtotal</span><b>₹{total.toLocaleString('en-IN')}</b></div><p>Your selected date and time will be confirmed by our team.</p><button className="clear-cart" onClick={clear}>Clear cart</button></aside></div><div className="checkout-form-panel"><RazorpayCheckout items={items.map(({ id, qty }) => ({ id, qty }))} onPaymentComplete={(mode, bookingId) => { clear(); setConfirmation({ mode, bookingId }) }}/></div></> : <div className="empty-cart"><div className="empty-cart-icon"><CircleHelp size={25}/></div><h2>Your cart is ready when you are.</h2><p>Choose a tank size and we’ll help arrange a visit.</p><Link className="button button-primary" href="/prices">Browse service prices <ArrowRight size={16}/></Link></div>}</section>
 }
 
 export function SectionPage({ slug }: { slug: string }) {
   if (slug === 'about-us') return <AboutUsPage/>
+  if (slug === 'reviews') return <ReviewsPage/>
   if (slug === 'cart') return <CartPage/>
   if (slug === 'processes') return <TankComparison/>
   const page = pages[slug] ?? pages['about-us']

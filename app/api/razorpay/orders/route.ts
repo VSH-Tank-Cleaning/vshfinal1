@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { randomUUID } from 'node:crypto'
-import { calculateBookingTotal, parseBookingItems, parseCustomerDetails, razorpayAuthorization } from '@/lib/razorpay'
+import { calculateBookingDiscounts, parseBookingItems, parseCustomerDetails, razorpayAuthorization } from '@/lib/razorpay'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -15,11 +15,13 @@ export async function POST(request: Request) {
   const body = await request.json().catch(() => null)
   const items = parseBookingItems(body?.items)
   const customer = parseCustomerDetails(body?.customer)
-  if (!items || !customer) {
-    return NextResponse.json({ error: 'Check your booking and customer details, then try again.' }, { status: 400 })
+  const paymentMode = body?.paymentMode
+  if (!items || !customer || (paymentMode !== 'online' && paymentMode !== 'advance')) {
+    return NextResponse.json({ error: 'Check your booking, payment option, and customer details, then try again.' }, { status: 400 })
   }
 
-  const amount = calculateBookingTotal(items, true) * 100
+  const discounts = calculateBookingDiscounts(items, paymentMode)
+  const amount = discounts.paymentAmount * 100
   if (!Number.isSafeInteger(amount) || amount <= 0) {
     return NextResponse.json({ error: 'The booking total is invalid.' }, { status: 400 })
   }
@@ -34,6 +36,10 @@ export async function POST(request: Request) {
     preferred_date: customer.preferredDate,
     preferred_time_slot: customer.timeSlot,
     customer_notes: customer.notes || 'None',
+    payment_mode: paymentMode,
+    booking_total: String(discounts.total),
+    payment_amount: String(discounts.paymentAmount),
+    balance_amount: String(discounts.balanceAmount),
   }
 
   try {

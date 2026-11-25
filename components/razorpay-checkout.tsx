@@ -2,7 +2,7 @@
 
 import Script from 'next/script'
 import { useState, type FormEvent } from 'react'
-import { calculateBookingDiscounts, type BookingItem } from '@/lib/razorpay'
+import { calculateBookingDiscounts, type BookingItem, type PaymentMode } from '@/lib/razorpay'
 import { SERVICEABLE_PINCODE_PATTERN } from '@/lib/service-areas'
 
 type CustomerDetails = {
@@ -55,15 +55,15 @@ const emptyDetails: CustomerDetails = {
   notes: '',
 }
 
-export type PaymentMode = 'online' | 'after-service'
-
 export function RazorpayCheckout({ items, onPaymentComplete }: { items: BookingItem[]; onPaymentComplete: (mode: PaymentMode, bookingId: string) => void }) {
   const [customer, setCustomer] = useState(emptyDetails)
   const [paymentMode, setPaymentMode] = useState<PaymentMode>('online')
   const [scriptReady, setScriptReady] = useState(false)
   const [processing, setProcessing] = useState(false)
   const [message, setMessage] = useState('')
-  const discounts = calculateBookingDiscounts(items, paymentMode === 'online')
+  const discounts = calculateBookingDiscounts(items, paymentMode)
+  const advanceDiscounts = calculateBookingDiscounts(items, 'advance')
+  const onlineDiscounts = calculateBookingDiscounts(items, 'online')
   const minDate = new Date(Date.now() - new Date().getTimezoneOffset() * 60_000).toISOString().slice(0, 10)
 
   function updateCustomer(field: keyof CustomerDetails, value: string) {
@@ -106,7 +106,7 @@ export function RazorpayCheckout({ items, onPaymentComplete }: { items: BookingI
       const orderResponse = await fetch('/api/razorpay/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items, customer }),
+        body: JSON.stringify({ items, customer, paymentMode }),
       })
       const orderData = await orderResponse.json().catch(() => null)
       if (!orderResponse.ok || !orderData?.orderId || !orderData?.keyId) {
@@ -118,7 +118,7 @@ export function RazorpayCheckout({ items, onPaymentComplete }: { items: BookingI
         amount: orderData.amount,
         currency: orderData.currency,
         name: 'VSH Tank Cleaning',
-        description: 'Tank cleaning service booking',
+        description: paymentMode === 'advance' ? '15% advance payment for tank cleaning' : 'Tank cleaning service booking',
         order_id: orderData.orderId,
         prefill: { name: customer.name, ...(customer.email ? { email: customer.email } : {}), contact: customer.phone },
         notes: { service_area: customer.area, pincode: customer.pincode },
@@ -130,6 +130,7 @@ export function RazorpayCheckout({ items, onPaymentComplete }: { items: BookingI
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 items,
+                paymentMode,
                 orderId: payment.razorpay_order_id,
                 paymentId: payment.razorpay_payment_id,
                 signature: payment.razorpay_signature,
@@ -140,7 +141,7 @@ export function RazorpayCheckout({ items, onPaymentComplete }: { items: BookingI
             if (!verificationResponse.ok || verificationData?.verified !== true || !bookingId) {
               throw new Error(verificationData?.error || 'We could not confirm this payment. Please contact our team with your payment ID.')
             }
-            onPaymentComplete('online', bookingId)
+            onPaymentComplete(paymentMode, bookingId)
           } catch (error) {
             setMessage(error instanceof Error ? error.message : 'We could not confirm this payment. Please contact our team.')
             setProcessing(false)
@@ -164,7 +165,7 @@ export function RazorpayCheckout({ items, onPaymentComplete }: { items: BookingI
   return <div className="razorpay-checkout">
     <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="afterInteractive" onLoad={() => setScriptReady(true)} onError={() => setMessage('Secure checkout could not load. Refresh the page and try again.')} />
     <h3>Complete your booking</h3>
-    <p className="razorpay-intro">Choose a visit time and save with our multi-tank and online payment offers.</p>
+    <p className="razorpay-intro">Choose a visit time and save with our multi-tank, online, or advance payment offers.</p>
     <form className="razorpay-form" onSubmit={handleSubmit}>
       <section className="checkout-step" aria-labelledby="booking-summary-heading">
         <h4 id="booking-summary-heading">Booking summary</h4>
@@ -172,7 +173,9 @@ export function RazorpayCheckout({ items, onPaymentComplete }: { items: BookingI
           <div><span>Booking subtotal</span><strong>₹{discounts.subtotal.toLocaleString('en-IN')}</strong></div>
           {discounts.volumePercent > 0 && <div><span>{discounts.volumePercent}% multi-tank savings ({discounts.tankCount} tanks)</span><strong>−₹{discounts.volumeAmount.toLocaleString('en-IN')}</strong></div>}
           {paymentMode === 'online' && <div><span>{discounts.onlinePercent}% online payment savings</span><strong>−₹{discounts.onlineAmount.toLocaleString('en-IN')}</strong></div>}
-          <div className="discount-total"><span>{paymentMode === 'online' ? 'Pay online' : 'Pay after service'}</span><strong>₹{discounts.total.toLocaleString('en-IN')}</strong></div>
+          {paymentMode === 'advance' && <div><span>{discounts.advancePercent}% advance booking discount</span><strong>−₹{discounts.advanceAmount.toLocaleString('en-IN')}</strong></div>}
+          <div className="discount-total"><span>{paymentMode === 'advance' ? 'Order total after discount' : paymentMode === 'online' ? 'Pay online' : 'Pay after service'}</span><strong>₹{discounts.total.toLocaleString('en-IN')}</strong></div>
+          {paymentMode === 'advance' && <><div><span>15% advance due now</span><strong>₹{discounts.paymentAmount.toLocaleString('en-IN')}</strong></div><div><span>Balance due after service</span><strong>₹{discounts.balanceAmount.toLocaleString('en-IN')}</strong></div></>}
           <p>Volume offer: 10% on 2 tanks, 12% on 3–5 tanks, and 15% on 6 or more tanks.</p>
         </div>
       </section>
@@ -237,25 +240,29 @@ export function RazorpayCheckout({ items, onPaymentComplete }: { items: BookingI
       </section>
       <section className="checkout-step" aria-labelledby="checkout-payment-heading">
         <h4 id="checkout-payment-heading">4. Payment</h4>
-        <fieldset className="razorpay-payment-mode">
+        <fieldset className="razorpay-payment-mode" disabled={processing}>
           <legend className="sr-only">Choose a payment option</legend>
           <label className={paymentMode === 'after-service' ? 'selected' : ''}>
             <input type="radio" name="paymentMode" value="after-service" checked={paymentMode === 'after-service'} onChange={() => setPaymentMode('after-service')} />
             <span className="payment-option-copy"><strong>Pay after service</strong><small>Cash or UPI once the job is done — ₹{calculateBookingDiscounts(items).total.toLocaleString('en-IN')}.</small></span>
           </label>
+          <label className={paymentMode === 'advance' ? 'selected' : ''}>
+            <input type="radio" name="paymentMode" value="advance" checked={paymentMode === 'advance'} onChange={() => setPaymentMode('advance')} />
+            <span className="payment-option-copy"><strong>Pay 15% advance <span className="payment-saving">Save ₹{(advanceDiscounts.volumeAmount + advanceDiscounts.advanceAmount).toLocaleString('en-IN')}</span></strong><small>Pay ₹{advanceDiscounts.paymentAmount.toLocaleString('en-IN')} now, get 5% off the order, and pay ₹{advanceDiscounts.balanceAmount.toLocaleString('en-IN')} after service.</small></span>
+          </label>
           <label className={paymentMode === 'online' ? 'selected' : ''}>
             <input type="radio" name="paymentMode" value="online" checked={paymentMode === 'online'} onChange={() => setPaymentMode('online')} />
-            <span className="payment-option-copy"><strong>Pay online now <span className="payment-saving">Save ₹{(discounts.volumeAmount + discounts.onlineAmount).toLocaleString('en-IN')}</span></strong><small>Pay ₹{discounts.total.toLocaleString('en-IN')} instead of ₹{discounts.subtotal.toLocaleString('en-IN')} — {discounts.volumePercent ? `${discounts.volumePercent}% multi-tank discount + ` : ''}{discounts.onlinePercent}% off for paying online.</small></span>
+            <span className="payment-option-copy"><strong>Pay online now <span className="payment-saving">Save ₹{(onlineDiscounts.volumeAmount + onlineDiscounts.onlineAmount).toLocaleString('en-IN')}</span></strong><small>Pay ₹{onlineDiscounts.total.toLocaleString('en-IN')} instead of ₹{onlineDiscounts.subtotal.toLocaleString('en-IN')} — {onlineDiscounts.volumePercent ? `${onlineDiscounts.volumePercent}% multi-tank discount + ` : ''}{onlineDiscounts.onlinePercent}% off for paying online.</small></span>
           </label>
         </fieldset>
       </section>
       <label className="razorpay-consent"><input type="checkbox" required /><span>I agree that VSH Tank Cleaning may use these details to arrange and confirm my service.</span></label>
       <p className="razorpay-privacy">Your booking details are sent securely to our team and are not used to change your selected prices.</p>
       {message && <p className="razorpay-message" role="alert">{message}</p>}
-      <button className="button button-primary razorpay-submit" type="submit" disabled={processing || (paymentMode === 'online' && !scriptReady)}>
-        {processing ? 'Please wait…' : paymentMode === 'after-service' ? 'Confirm booking' : scriptReady ? 'Continue to secure payment' : 'Loading secure checkout…'}
+      <button className="button button-primary razorpay-submit" type="submit" disabled={processing || (paymentMode !== 'after-service' && !scriptReady)}>
+        {processing ? 'Please wait…' : paymentMode === 'after-service' ? 'Confirm booking' : paymentMode === 'advance' ? scriptReady ? `Pay ₹${discounts.paymentAmount.toLocaleString('en-IN')} advance` : 'Loading secure checkout…' : scriptReady ? 'Continue to secure payment' : 'Loading secure checkout…'}
       </button>
-      {paymentMode === 'online' && <p className="razorpay-powered">Payments are processed securely by Razorpay.</p>}
+      {paymentMode !== 'after-service' && <p className="razorpay-powered">Payments are processed securely by Razorpay.</p>}
     </form>
   </div>
 }

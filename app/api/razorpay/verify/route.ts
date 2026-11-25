@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createHmac, timingSafeEqual } from 'node:crypto'
 import { sendBookingNotification } from '@/lib/booking-notification'
-import { calculateBookingTotal, generateBookingId, parseBookingItems, parseCustomerDetails, razorpayAuthorization } from '@/lib/razorpay'
+import { calculateBookingDiscounts, generateBookingId, parseBookingItems, parseCustomerDetails, razorpayAuthorization } from '@/lib/razorpay'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -15,10 +15,11 @@ export async function POST(request: Request) {
 
   const body = await request.json().catch(() => null)
   const items = parseBookingItems(body?.items)
+  const paymentMode = body?.paymentMode
   const orderId = typeof body?.orderId === 'string' ? body.orderId : ''
   const paymentId = typeof body?.paymentId === 'string' ? body.paymentId : ''
   const signature = typeof body?.signature === 'string' ? body.signature : ''
-  if (!items || !/^order_[A-Za-z0-9]+$/.test(orderId) || !/^pay_[A-Za-z0-9]+$/.test(paymentId) || !/^[a-f0-9]{64}$/i.test(signature)) {
+  if (!items || (paymentMode !== 'online' && paymentMode !== 'advance') || !/^order_[A-Za-z0-9]+$/.test(orderId) || !/^pay_[A-Za-z0-9]+$/.test(paymentId) || !/^[a-f0-9]{64}$/i.test(signature)) {
     return NextResponse.json({ error: 'The payment details could not be verified.' }, { status: 400 })
   }
 
@@ -28,7 +29,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'The payment signature is invalid.' }, { status: 400 })
   }
 
-  const expectedAmount = calculateBookingTotal(items, true) * 100
+  const discounts = calculateBookingDiscounts(items, paymentMode)
+  const expectedAmount = discounts.paymentAmount * 100
   const authorization = razorpayAuthorization(keyId, keySecret)
 
   try {
@@ -50,9 +52,16 @@ export async function POST(request: Request) {
     }
 
     const [order, payment] = await Promise.all([orderResponse.json(), paymentResponse.json()])
+    const orderNotes = order.notes && typeof order.notes === 'object'
+      ? order.notes as Record<string, unknown>
+      : {}
     const validPayment = order.id === orderId
       && order.amount === expectedAmount
       && order.currency === 'INR'
+      && orderNotes.payment_mode === paymentMode
+      && orderNotes.booking_total === String(discounts.total)
+      && orderNotes.payment_amount === String(discounts.paymentAmount)
+      && orderNotes.balance_amount === String(discounts.balanceAmount)
       && payment.id === paymentId
       && payment.order_id === orderId
       && payment.amount === expectedAmount
@@ -63,9 +72,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Razorpay has not confirmed a captured payment. Please contact our team with your payment ID.' }, { status: 400 })
     }
 
-    const orderNotes = order.notes && typeof order.notes === 'object'
-      ? order.notes as Record<string, unknown>
-      : {}
     const customer = parseCustomerDetails({
       name: orderNotes.customer_name,
       email: orderNotes.customer_email,
@@ -82,14 +88,14 @@ export async function POST(request: Request) {
       ? await sendBookingNotification({
         customer,
         items,
-        paymentStatus: 'paid',
+        paymentStatus: paymentMode === 'advance' ? 'advance-paid' : 'paid',
         bookingId,
         paymentId,
         idempotencyKey: `booking-notification-${paymentId}`,
       })
       : false
 
-    return NextResponse.json({ verified: true, bookingId, notificationSent })
+    return NextResponse.json({ verified: true, bookingId, mode: paymentMode, notificationSent })
   } catch {
     return NextResponse.json({ error: 'Unable to confirm payment with Razorpay. Please contact our team with your payment ID.' }, { status: 502 })
   }
