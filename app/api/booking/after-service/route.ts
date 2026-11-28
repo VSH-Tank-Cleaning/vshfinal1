@@ -1,7 +1,9 @@
-import { randomUUID } from 'node:crypto'
 import { NextResponse } from 'next/server'
+import { getDb } from '@/lib/db'
+import { serviceBookings } from '@/lib/db/schema'
 import { sendBookingNotification } from '@/lib/booking-notification'
 import { generateBookingId, parseBookingItems, parseCustomerDetails } from '@/lib/razorpay'
+
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -15,16 +17,27 @@ export async function POST(request: Request) {
   }
 
   const bookingId = generateBookingId()
-  const notificationSent = await sendBookingNotification({
+
+  try {
+    await getDb().insert(serviceBookings).values({
+      id: bookingId,
+      userId: `guest:${bookingId}`,
+      items,
+      customer,
+      paymentStatus: 'due-after-service',
+    })
+  } catch {
+    return NextResponse.json({ error: 'We could not save your booking right now. Please call us on +91 95990 57079.' }, { status: 503 })
+  }
+
+  await sendBookingNotification({
     customer,
     items,
     paymentStatus: 'due-after-service',
     bookingId,
-    idempotencyKey: `booking-after-service-${randomUUID()}`,
+    idempotencyKey: `booking-after-service-${bookingId}`,
   })
-  if (!notificationSent) {
-    return NextResponse.json({ error: 'We could not save your booking right now. Please call us on +91 95990 57079.' }, { status: 503 })
-  }
 
   return NextResponse.json({ confirmed: true, bookingId })
+
 }
